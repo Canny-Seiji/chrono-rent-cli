@@ -8,7 +8,7 @@ class RentalRecord {
 public:
     std::string recordId;
     Customer customer;
-    Vehicle* vehicle; // Pointer to the rented vehicle
+    Vehicle* vehicle; 
 
     RentalRecord(std::string id, Customer cust, Vehicle* veh);
 };
