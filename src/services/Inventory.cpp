@@ -32,7 +32,7 @@ void Inventory::saveToFile(const std::string& filename) const {
     for (const auto* v : fleet) {
         // Format: Plate|Model|Rate|RentedStatus
         outFile << v->getPlate() << "|" 
-                << "UnknownModel" << "|" // Simplified for now
+                << "UnknownModel" << "|" 
                 << "500.0" << "|" 
                 << v->getRentedStatus() << "\n";
     }
