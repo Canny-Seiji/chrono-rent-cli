@@ -179,7 +179,6 @@ std::string Parser::getValidContact(const std::string& prompt) {
         std::cout << prompt;
         std::cin >> input;
         
-        // Simple numeric check for contact
         bool isNum = true;
         for (char c : input) if (!isdigit(c)) isNum = false;
         
