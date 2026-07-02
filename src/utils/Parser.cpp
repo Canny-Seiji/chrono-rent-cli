@@ -25,9 +25,9 @@ int Parser::getValidInt(const string& prompt, int min, int max) {
             if (value >= min && value <= max) {
                 return value;
             }
-            cout << "\033[1;31mError: Out of range (" << min << "-" << max << ").\033[0m\n";
+            cout << Colors::RED << "Out of range (" << min << "-" << max << ")." << Colors::RESET << "\n";
         } else {
-            cout << "\033[1;31mError: Invalid number format.\033[0m\n";
+            cout << Colors::RED << "Error: Invalid number format." << Colors::RESET << "\n";
             clearInputBuffer();
         }
     }
@@ -149,9 +149,9 @@ std::string Parser::getValidPlate(const std::string& prompt) {
         }
 
         clearInputBuffer();
-        std::cout << "\033[1;31mError: Invalid Format!\n";
+        std::cout << Colors::RED << "Error: Invalid Format!" << Colors::RESET << "\n";
         std::cout << "Required Format: 3 letters followed by 4 numbers (e.g., ABC1234).\n";
-        std::cout << "You entered: " << plate << "\033[0m\n";
+        std::cout << "You entered: " << plate << Colors::RESET << "\n";
     }
 }
 
@@ -168,7 +168,8 @@ std::string Parser::getValidName(const std::string& prompt) {
         char choice;
         cout << "Do you like to cancel transaction? (y/n): ";
         std::cin >> choice;
-
+        clearInputBuffer();
+        
         if (std::tolower(choice) != 'y') {
             return ""; 
         }
@@ -183,7 +184,8 @@ std::string Parser::getValidLicense(const std::string& prompt) {
     while (true) {
         std::cout << prompt;
         std::cin >> input;
-        
+        clearInputBuffer();
+
         trim(input);
         // 3-2-6 format
         if (isValidLicense(input)) {
@@ -207,7 +209,8 @@ std::string Parser::getValidContact(const std::string& prompt) {
     while (true) {
         std::cout << prompt;
         std::cin >> input;
-        
+        clearInputBuffer();
+
         trim(input);
         // Check if the input is exactly 11 digits
         if (isValidContact(input)) {
@@ -231,6 +234,7 @@ std::string Parser::getExistingPlate(Inventory& fleet) {
     while (true) {
         std::cout << "Enter Vehicle Plate Number: ";
         std::cin >> plate;
+        clearInputBuffer();
         
         trim(plate);
         plate = toUpper(plate); 
