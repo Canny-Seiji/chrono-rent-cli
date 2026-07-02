@@ -4,6 +4,8 @@
 #include "models/Vehicle.hpp"
 #include <vector>
 #include <fstream> 
+#include <iostream>
+#include <iomanip>
 
 class Inventory {
 private:

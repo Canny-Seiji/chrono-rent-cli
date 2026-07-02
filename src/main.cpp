@@ -86,14 +86,12 @@ int main() {
             }
             
             case 5: { // Add Vehicle
+                Parser::clearInputBuffer();
+                std::string model = Parser::getValidName("Model: ");
                 std::string plate = Parser::getValidPlate("Enter New Vehicle Plate (e.g., ABC1234): ");
+                double rate = 500.0; 
                 
-                std::string model;
-                double rate;
-                std::cout << "Model: "; std::cin >> model;
-                std::cout << "Rate: "; std::cin >> rate;
-                
-                myFleet.addVehicle(new Sedan(plate, model, rate));
+                myFleet.addVehicle(new Car(model, plate, rate));
                 std::cout << "Vehicle added successfully.\n";
                 break;
             }

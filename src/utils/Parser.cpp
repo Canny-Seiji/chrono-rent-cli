@@ -59,6 +59,13 @@ bool Parser::isAlpha(const string& str) {
     return true;
 }
 
+bool Parser::isAlphaNum(const string& str) {
+    for (char c : str)
+        if (!isalnum(static_cast<unsigned char>(c)) && c != '-' && c != '\'' && c != ' ')
+            return false;
+    return true;
+}
+
 bool Parser::idExists(const vector<Customer>& customers, const string& id) {
     string idUpper = toUpper(id);
     for (const auto& c : customers)
@@ -132,7 +139,9 @@ std::string Parser::getValidPlate(const std::string& prompt) {
     while (true) {
         std::cout << prompt;
         std::cin >> plate;
-        
+        clearInputBuffer();
+
+        trim(plate);
         plate = toUpper(plate);
 
         if (isValidPlate(plate)) {
@@ -150,14 +159,16 @@ std::string Parser::getValidName(const std::string& prompt) {
     std::string input;
     while (true) {
         std::cout << prompt;
-        std::cin >> input;
+        getline(std::cin, input);
         
-        if (isAlpha(input)) { // Reusing your existing isAlpha
+        trim(input); 
+        if (isAlphaNum(input)) { 
             return input;
         }
         char choice;
         cout << "Do you like to cancel transaction? (y/n): ";
         std::cin >> choice;
+
         if (std::tolower(choice) != 'y') {
             return ""; 
         }
@@ -173,6 +184,7 @@ std::string Parser::getValidLicense(const std::string& prompt) {
         std::cout << prompt;
         std::cin >> input;
         
+        trim(input);
         // 3-2-6 format
         if (isValidLicense(input)) {
             return input;
@@ -196,6 +208,7 @@ std::string Parser::getValidContact(const std::string& prompt) {
         std::cout << prompt;
         std::cin >> input;
         
+        trim(input);
         // Check if the input is exactly 11 digits
         if (isValidContact(input)) {
             return input;
@@ -219,6 +232,7 @@ std::string Parser::getExistingPlate(Inventory& fleet) {
         std::cout << "Enter Vehicle Plate Number: ";
         std::cin >> plate;
         
+        trim(plate);
         plate = toUpper(plate); 
 
         if (!isValidPlate(plate)) {
