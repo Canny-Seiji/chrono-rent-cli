@@ -1,12 +1,4 @@
-#include "models/Customer.hpp"
 #include "utils/Parser.hpp"
-#include "utils/Colors.hpp"
-#include <iostream>
-#include <sstream>
-#include <algorithm>
-#include <limits>
-#include <cctype>
-
 using namespace std;
 
 // High-level clean split using string streams
@@ -67,14 +59,6 @@ bool Parser::isAlpha(const string& str) {
     return true;
 }
 
-bool Parser::isValidPlateOrCategory(const string& str) {
-    if (str.empty()) return false;
-    for (char c : str)
-        if (!isalnum(static_cast<unsigned char>(c)) && c != ' ' && c != '-' && c != '.')
-            return false;
-    return true;
-}
-
 bool Parser::idExists(const vector<Customer>& customers, const string& id) {
     string idUpper = toUpper(id);
     for (const auto& c : customers)
@@ -124,6 +108,25 @@ bool Parser::isValidPlate(const std::string& plate) {
     return true;
 }
 
+bool Parser::isValidLicense(const std::string& license) {
+    if (license.length() != 11) return false;
+    
+    if (!isalpha(static_cast<unsigned char>(license[0]))) return false;
+
+    for (int i = 1; i < 11; ++i) {
+        if (!isdigit(static_cast<unsigned char>(license[i]))) return false;
+    }
+    return true;
+}
+
+bool Parser::isValidContact(const std::string& contact) {
+    if (contact.length() != 11) return false;
+    for (char c : contact) {
+        if (!isdigit(static_cast<unsigned char>(c))) return false;
+    }
+    return true;
+}
+
 std::string Parser::getValidPlate(const std::string& prompt) {
     std::string plate;
     while (true) {
@@ -152,9 +155,15 @@ std::string Parser::getValidName(const std::string& prompt) {
         if (isAlpha(input)) { // Reusing your existing isAlpha
             return input;
         }
+        char choice;
+        cout << "Do you like to cancel transaction? (y/n): ";
+        std::cin >> choice;
+        if (std::tolower(choice) != 'y') {
+            return ""; 
+        }
         
         clearInputBuffer();
-        std::cout << "\033[1;31mError: Invalid name format. Use letters only.\033[0m\n";
+        std::cout << Colors::RED << "Error: Invalid name format. Use letters only.\n" << Colors::RESET;
     }
 }
 
@@ -164,12 +173,20 @@ std::string Parser::getValidLicense(const std::string& prompt) {
         std::cout << prompt;
         std::cin >> input;
         
-        if (isValidPlateOrCategory(input)) { // Reusing your existing logic
+        // 3-2-6 format
+        if (isValidLicense(input)) {
             return input;
-        }
+        } else {
+            clearInputBuffer();
+            std::cout << Colors::RED << "Invalid license format. Please use the format \"A123456789\" (1 letter followed by 10 digits)." << Colors::RESET << "\n";
+        }      
         
-        clearInputBuffer();
-        std::cout << "\033[1;31mError: Invalid license format (Alphanumeric only).\033[0m\n";
+        char choice;
+        cout << "Would you like to try entering the license again? (y/n): ";
+        std::cin >> choice;
+        if (std::tolower(choice) != 'y') {
+            return ""; 
+        }
     }
 }
 
@@ -179,13 +196,20 @@ std::string Parser::getValidContact(const std::string& prompt) {
         std::cout << prompt;
         std::cin >> input;
         
-        bool isNum = true;
-        for (char c : input) if (!isdigit(c)) isNum = false;
-        
-        if (isNum && !input.empty()) return input;
-        
-        clearInputBuffer();
-        std::cout << "\033[1;31mError: Invalid contact. Enter digits only.\033[0m\n";
+        // Check if the input is exactly 11 digits
+        if (isValidContact(input)) {
+            return input;
+        } else {
+            clearInputBuffer();
+            std::cout << Colors::RED << "Invalid contact. Enter exactly 11 digits." << Colors::RESET << "\n";
+        }
+
+        char choice;
+        cout << "Would you like to try entering the contact again? (y/n): ";
+        std::cin >> choice;
+        if (std::tolower(choice) != 'y') {
+            return ""; 
+        }
     }
 }
 std::string Parser::getExistingPlate(Inventory& fleet) {

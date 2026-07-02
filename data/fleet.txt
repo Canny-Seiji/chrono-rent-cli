@@ -1,2 +1,2 @@
 abc1234|UnknownModel|500.0|0
-CCS0015|UnknownModel|500.0|0
+CCS0015|UnknownModel|500.0|1

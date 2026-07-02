@@ -35,11 +35,11 @@ int main() {
                     break;
                 }
 
-                std::string fName = Parser::getValidName("First Name: ");
-                std::string mName = Parser::getValidName("Middle Initial: ");
-                std::string lName = Parser::getValidName("Last Name: ");
-                std::string license = Parser::getValidLicense("License Number: ");
-                std::string contact = Parser::getValidContact("Contact Number: ");
+                std::string fName = Parser::getValidName("First Name: ");          if(fName.empty())   { std::cout << Colors::YELLOW << "Rental process cancelled.\n" << Colors::RESET; break; }
+                std::string mName = Parser::getValidName("Middle Initial: ");      if(mName.empty())   { std::cout << Colors::YELLOW << "Rental process cancelled.\n" << Colors::RESET; break; }
+                std::string lName = Parser::getValidName("Last Name: ");           if(lName.empty())   { std::cout << Colors::YELLOW << "Rental process cancelled.\n" << Colors::RESET; break; }
+                std::string license = Parser::getValidLicense("License Number: "); if(license.empty()) { std::cout << Colors::YELLOW << "Rental process cancelled.\n" << Colors::RESET; break; }
+                std::string contact = Parser::getValidContact("Contact Number: "); if(contact.empty()) { std::cout << Colors::YELLOW << "Rental process cancelled.\n" << Colors::RESET; break; }
 
                 std::string id = custRegistry.generateUniqueId(fName, mName, lName);
                 Customer newCust(id, fName, mName, lName, license, contact);

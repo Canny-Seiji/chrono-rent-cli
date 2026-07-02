@@ -2,10 +2,15 @@
 #define PARSER_H
 
 #include "services/Inventory.hpp"
+#include "models/Customer.hpp"
+#include "utils/Colors.hpp"
+#include <iostream>
+#include <sstream>
+#include <algorithm>
 #include <string>
 #include <vector>
+#include <limits>
 #include <cctype>
-
 class Customer;
 
 class Parser {
@@ -27,6 +32,8 @@ public:
     static bool isValidPlateOrCategory(const std::string& str);
     static bool idExists(const std::vector<Customer>& customers, const std::string& id);
     static bool isValidPlate(const std::string& plate);
+    static bool isValidLicense(const std::string& license);
+    static bool isValidContact(const std::string& contact);
     static std::string getValidPlate(const std::string& prompt);
     static std::string getValidName(const std::string& prompt);
     static std::string getValidLicense(const std::string& prompt);
