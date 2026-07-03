@@ -4,3 +4,4 @@ CBN5678|UnknownModel|500.0|0
 TVP9876|UnknownModel|500.0|0
 FEU6789|UnknownModel|500.0|0
 FEU1234|UnknownModel|500.0|1
+FEU5678|UnknownModel|500.0|0

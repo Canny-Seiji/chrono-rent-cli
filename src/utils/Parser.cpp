@@ -17,22 +17,6 @@ void Parser::clearInputBuffer() {
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
 }
 
-int Parser::getValidInt(const string& prompt, int min, int max) {
-    int value;
-    while (true) {
-        cout << prompt;
-        if (cin >> value) {
-            if (value >= min && value <= max) {
-                return value;
-            }
-            cout << Colors::RED << "Out of range (" << min << "-" << max << ")." << Colors::RESET << "\n";
-        } else {
-            cout << Colors::RED << "Error: Invalid number format." << Colors::RESET << "\n";
-            clearInputBuffer();
-        }
-    }
-}
-
 string Parser::toUpper(string str) {
     for (char& c : str)
         c = static_cast<char>(toupper(static_cast<unsigned char>(c)));
@@ -79,6 +63,14 @@ void Parser::sortCustomers(vector<Customer>& customers) {
     });
 }
 
+std::string Parser::findUniqueId(const std::string& baseId, int counter, const std::vector<Customer>& customers) {
+    std::string candidateId = (counter == 1) ? baseId : baseId + std::to_string(counter);
+    if (!idExists(customers, candidateId)) {
+        return candidateId;
+    }
+    return findUniqueId(baseId, counter + 1, customers);
+}
+
 string Parser::generateCustomerId(const string& firstName, const string& middleName, const string& lastName, const vector<Customer>& customers) {
     string baseId;
     if (!firstName.empty())
@@ -91,13 +83,7 @@ string Parser::generateCustomerId(const string& firstName, const string& middleN
             baseId += static_cast<char>(tolower(static_cast<unsigned char>(lastName[i])));
     }
     
-    string finalId = baseId;
-    int counter = 2;
-    while (idExists(customers, finalId)) {
-        finalId = baseId + to_string(counter);
-        counter++;
-    }
-    return finalId;
+    return findUniqueId(baseId, 1, customers);
 }
 
 bool Parser::isValidPlate(const std::string& plate) {
@@ -132,6 +118,22 @@ bool Parser::isValidContact(const std::string& contact) {
         if (!isdigit(static_cast<unsigned char>(c))) return false;
     }
     return true;
+}
+
+int Parser::getValidInt(const string& prompt, int min, int max) {
+    int value;
+    while (true) {
+        cout << prompt;
+        if (cin >> value) {
+            if (value >= min && value <= max) {
+                return value;
+            }
+            cout << Colors::RED << "Out of range (" << min << "-" << max << ")." << Colors::RESET << "\n";
+        } else {
+            cout << Colors::RED << "Error: Invalid number format." << Colors::RESET << "\n";
+            clearInputBuffer();
+        }
+    }
 }
 
 std::string Parser::getValidPlate(const std::string& prompt) {

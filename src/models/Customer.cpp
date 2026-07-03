@@ -5,7 +5,7 @@ Customer::Customer(std::string id, std::string f, std::string m, std::string l, 
     : id(id), fName(f), mName(m), lName(l), license(lic), contact(cont) {}
 
 std::string Customer::getFullName() const {
-    return fName + " " + mName + ". " + lName;
+    return fName + " " + mName + " " + lName;
 }
 
 double RentalInfo::getHoursRemaining() const {

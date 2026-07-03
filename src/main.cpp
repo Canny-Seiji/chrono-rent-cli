@@ -36,7 +36,7 @@ int main() {
                 }
 
                 std::string fName = Parser::getValidName("First Name: ");          if(fName.empty())   { std::cout << Colors::YELLOW << "Rental process cancelled.\n" << Colors::RESET; break; }
-                std::string mName = Parser::getValidName("Middle Initial: ");      if(mName.empty())   { std::cout << Colors::YELLOW << "Rental process cancelled.\n" << Colors::RESET; break; }
+                std::string mName = Parser::getValidName("Middle Name: ");         if(mName.empty())   { std::cout << Colors::YELLOW << "Rental process cancelled.\n" << Colors::RESET; break; }
                 std::string lName = Parser::getValidName("Last Name: ");           if(lName.empty())   { std::cout << Colors::YELLOW << "Rental process cancelled.\n" << Colors::RESET; break; }
                 std::string license = Parser::getValidLicense("License Number: "); if(license.empty()) { std::cout << Colors::YELLOW << "Rental process cancelled.\n" << Colors::RESET; break; }
                 std::string contact = Parser::getValidContact("Contact Number: "); if(contact.empty()) { std::cout << Colors::YELLOW << "Rental process cancelled.\n" << Colors::RESET; break; }
