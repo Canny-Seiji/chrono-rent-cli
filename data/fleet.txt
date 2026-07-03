@@ -1,7 +1,3 @@
-abc1234|UnknownModel|500.0|0
-CCS0015|UnknownModel|500.0|0
-CBN5678|UnknownModel|500.0|0
-TVP9876|UnknownModel|500.0|0
-FEU6789|UnknownModel|500.0|0
-FEU1234|UnknownModel|500.0|1
-FEU5678|UnknownModel|500.0|0
+BYD Sealion 7|FEU1234|500|0
+BYD eMAX 9 DM-i Premium|FEU0015|500|0
+Toyota Tamaraw|FEU1111|500|0

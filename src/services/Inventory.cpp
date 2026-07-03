@@ -13,41 +13,60 @@ Vehicle* Inventory::findVehicle(const std::string& plate) {
     }
     return nullptr;
 }
-
 void Inventory::displayFleet() const {
     if (fleet.empty()) {
         std::cout << "Fleet is currently empty.\n";
         return;
     }
-    std::cout << "\n--- Current Fleet ---\n";
-    std::cout << "\n" << std::left 
-              << std::setw(5) << "No." 
-              << std::setw(15) << "Model" 
-              << std::setw(15) << "Plate" 
-              << std::setw(12) << "Status" 
-              << "Rate" << "\n";
-    
-    std::cout << std::string(60, '-') << "\n"; // Decorative line
 
-    // 2. Print the items
+    //Dynamic column widths
+    size_t wNo = 5 + 5;
+    size_t wModel = 5 + 5;  
+    size_t wPlate = 5 + 5;  
+    size_t wStatus = 6 + 5; 
+    size_t wRate = 4 + 5;   
+
+    for (const auto* v : fleet) {
+        wModel = std::max(wModel, v->getModel().length() + 5);
+        wPlate = std::max(wPlate, v->getPlate().length() + 5);
+        
+        std::string statusStr = (v->getRentedStatus() ? "Rented" : "Available");
+        wStatus = std::max(wStatus, statusStr.length() + 5);
+        
+        std::string rateStr = "$" + std::to_string((int)v->getRate()); 
+        wRate = std::max(wRate, rateStr.length() + 5);
+    }
+
+    std::cout << "\n--- Current Fleet ---\n\n";
+    
+    std::cout << std::left 
+              << std::setw(wNo) << "No."
+              << std::setw(wModel) << "Model"
+              << std::setw(wPlate) << "Plate"
+              << std::setw(wStatus) << "Status"
+              << std::setw(wRate) << "Rate" << "\n";
+
+    std::cout << std::string(wNo + wModel + wPlate + wStatus + wRate, '-') << "\n";
+
     int carNumber = 1;
     for (const auto* v : fleet) {
         std::cout << std::left 
-                  << std::setw(5) << carNumber++
-                  << std::setw(15) << v->getModel()
-                  << std::setw(15) << v->getPlate()
-                  << std::setw(12) << (v->getRentedStatus() ? "Rented" : "Available")
-                  << "$" << v->getRate() << "\n";
+                  << std::setw(wNo) << carNumber++
+                  << std::setw(wModel) << v->getModel()
+                  << std::setw(wPlate) << v->getPlate()
+                  << std::setw(wStatus) << (v->getRentedStatus() ? "Rented" : "Available")
+                  << std::setw(wRate) << ("$" + std::to_string((int)v->getRate())) << "\n";
     }
 }
 
 void Inventory::saveToFile(const std::string& filename) const {
     std::ofstream outFile(filename);
+    if (!outFile) return; 
+
     for (const auto* v : fleet) {
-        // Format: Plate|Model|Rate|RentedStatus
-        outFile << v->getPlate() << "|" 
-                << "UnknownModel" << "|" 
-                << "500.0" << "|" 
+        outFile << v->getModel()<< "|" 
+                << v->getPlate() << "|"  
+                << v->getRate() << "|"   
                 << v->getRentedStatus() << "\n";
     }
     outFile.close();
@@ -59,9 +78,10 @@ void Inventory::loadFromFile(const std::string& filename) {
     
     while (std::getline(inFile, line)) {
         std::vector<std::string> data = Parser::split(line, '|');
-        if (data.size() >= 3) {
-            // Instantiate 'Car' instead of 'Sedan'
-            addVehicle(new Car(data[1], data[0], std::stod(data[2])));
+        if (data.size() >= 4) { 
+            Car* newCar = new Car(data[1], data[0], std::stod(data[2]));
+            newCar->setRentedStatus(std::stoi(data[3]) != 0);
+            addVehicle(newCar);
         }
     }
     inFile.close();
