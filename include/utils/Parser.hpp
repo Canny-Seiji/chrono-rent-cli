@@ -27,7 +27,6 @@ public:
     static void clearInputBuffer();
     static bool isAlpha(const std::string& str);
     static bool isAlphaNum(const std::string& str);
-    static bool isValidPlateOrCategory(const std::string& str);
     static bool idExists(const std::vector<Customer>& customers, const std::string& id);
     static bool isValidPlate(const std::string& plate);
     static bool isValidLicense(const std::string& license);
