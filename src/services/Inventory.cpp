@@ -33,7 +33,7 @@ void Inventory::displayFleet() const {
         std::string statusStr = (v->getRentedStatus() ? "Rented" : "Available");
         wStatus = std::max(wStatus, statusStr.length() + 5);
         
-        std::string rateStr = "$" + std::to_string((int)v->getRate()); 
+        std::string rateStr = "₱" + std::to_string((int)v->getRate()); 
         wRate = std::max(wRate, rateStr.length() + 5);
     }
 
@@ -55,7 +55,7 @@ void Inventory::displayFleet() const {
                   << std::setw(wModel) << v->getModel()
                   << std::setw(wPlate) << v->getPlate()
                   << std::setw(wStatus) << (v->getRentedStatus() ? "Rented" : "Available")
-                  << std::setw(wRate) << ("$" + std::to_string((int)v->getRate())) << "\n";
+                  << std::setw(wRate) << ("₱" + std::to_string((int)v->getRate())) << "\n";
     }
 }
 

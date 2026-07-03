@@ -1,3 +1,6 @@
 BYD Sealion 7|FEU1234|500|0
 BYD eMAX 9 DM-i Premium|FEU0015|500|0
 Toyota Tamaraw|FEU1111|500|0
+ABC1234|Mitsubishi Destinator|500|0
+BYD Sealion 7|FEU1234|10000.5|0
+MIT1234|Mitsubishi L300|8000|0

@@ -126,12 +126,32 @@ int Parser::getValidInt(const string& prompt, int min, int max) {
         cout << prompt;
         if (cin >> value) {
             if (value >= min && value <= max) {
+                clearInputBuffer(); 
                 return value;
             }
             cout << Colors::RED << "Out of range (" << min << "-" << max << ")." << Colors::RESET << "\n";
+            clearInputBuffer(); 
         } else {
             cout << Colors::RED << "Error: Invalid number format." << Colors::RESET << "\n";
-            clearInputBuffer();
+            clearInputBuffer(); 
+        }
+    }
+}
+
+double Parser::getValidDouble(const std::string& prompt, double min) {
+    double value;
+    while (true) {
+        std::cout << prompt;
+        if (std::cin >> value) {
+            if (value >= min) {
+                clearInputBuffer(); 
+                return value;
+            }
+            std::cout << Colors::RED << "Rate must be at least " << min << Colors::RESET << "\n";
+            clearInputBuffer(); 
+        } else {
+            std::cout << Colors::RED << "Error: Invalid number format." << Colors::RESET << "\n";
+            clearInputBuffer(); 
         }
     }
 }

@@ -62,7 +62,7 @@ int main() {
                 std::string plate = Parser::getExistingPlate(myFleet);
                 
                 if (plate.empty()) {
-                    std::cout << "Return process cancelled.\n";
+                    std::cout << Colors::YELLOW << "Return process cancelled.\n" << Colors::RESET;
                     break;
                 }
 
@@ -86,10 +86,9 @@ int main() {
             }
             
             case 5: { // Add Vehicle
-                Parser::clearInputBuffer();
-                std::string model = Parser::getValidName("Model: ");
+                std::string model = Parser::getValidName("Enter Model: ");
                 std::string plate = Parser::getValidPlate("Enter New Vehicle Plate (e.g., ABC1234): ");
-                double rate = 500.0; 
+                double rate = Parser::getValidDouble("Enter Daily Rental Rate: ", 8000.00);
                 
                 myFleet.addVehicle(new Car(model, plate, rate));
                 std::cout << "Vehicle added successfully.\n";

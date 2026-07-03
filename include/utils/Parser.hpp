@@ -33,6 +33,7 @@ public:
     static bool isValidLicense(const std::string& license);
     static bool isValidContact(const std::string& contact);
     static int  getValidInt(const std::string& prompt, int min, int max);
+    static double getValidDouble(const std::string& prompt, double min);
     static std::string getValidPlate(const std::string& prompt);
     static std::string getValidName(const std::string& prompt);
     static std::string getValidLicense(const std::string& prompt);
