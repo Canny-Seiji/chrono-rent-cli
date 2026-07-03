@@ -13,49 +13,60 @@ Vehicle* Inventory::findVehicle(const std::string& plate) {
     }
     return nullptr;
 }
+
 void Inventory::displayFleet() const {
     if (fleet.empty()) {
         std::cout << "Fleet is currently empty.\n";
         return;
     }
 
-    //Dynamic column widths
+    // dynamic column widths
     size_t wNo = 5 + 5;
-    size_t wModel = 5 + 5;  
-    size_t wPlate = 5 + 5;  
-    size_t wStatus = 6 + 5; 
-    size_t wRate = 4 + 5;   
+    size_t wModel = 5 + 5;
+    size_t wPlate = 5 + 5;
+    size_t wStatus = 6 + 5;
+    size_t wRate = 4 + 5;
 
     for (const auto* v : fleet) {
         wModel = std::max(wModel, v->getModel().length() + 5);
         wPlate = std::max(wPlate, v->getPlate().length() + 5);
-        
+
         std::string statusStr = (v->getRentedStatus() ? "Rented" : "Available");
         wStatus = std::max(wStatus, statusStr.length() + 5);
-        
-        std::string rateStr = "₱" + std::to_string((int)v->getRate()); 
+
+        std::string rateStr = "₱" + std::to_string((int)v->getRate());
         wRate = std::max(wRate, rateStr.length() + 5);
     }
 
+    // Print Headers
     std::cout << "\n--- Current Fleet ---\n\n";
     
-    std::cout << std::left 
+    std::cout << Colors::YELLOW; 
+    std::cout << std::left
               << std::setw(wNo) << "No."
               << std::setw(wModel) << "Model"
               << std::setw(wPlate) << "Plate"
               << std::setw(wStatus) << "Status"
-              << std::setw(wRate) << "Rate" << "\n";
+              << std::setw(wRate) << "Rate";
+    std::cout << Colors::RESET << "\n"; 
 
     std::cout << std::string(wNo + wModel + wPlate + wStatus + wRate, '-') << "\n";
 
+    // Print Fleet Data
     int carNumber = 1;
     for (const auto* v : fleet) {
-        std::cout << std::left 
+        // Prepare data
+        std::string statusStr = (v->getRentedStatus() ? "Rented" : "Available");
+        std::string statusColor = (v->getRentedStatus() ? Colors::RED : Colors::GREEN);
+        std::string rateStr = "₱" + std::to_string((int)v->getRate());
+
+        // Print row
+        std::cout << std::left
                   << std::setw(wNo) << carNumber++
                   << std::setw(wModel) << v->getModel()
-                  << std::setw(wPlate) << v->getPlate()
-                  << std::setw(wStatus) << (v->getRentedStatus() ? "Rented" : "Available")
-                  << std::setw(wRate) << ("₱" + std::to_string((int)v->getRate())) << "\n";
+                  << std::setw(wPlate) << v->getPlate();
+        std::cout << statusColor << std::setw(wStatus) << statusStr << Colors::RESET;
+        std::cout << std::setw(wRate) << rateStr << "\n";
     }
 }
 
@@ -64,8 +75,8 @@ void Inventory::saveToFile(const std::string& filename) const {
     if (!outFile) return; 
 
     for (const auto* v : fleet) {
-        outFile << v->getModel()<< "|" 
-                << v->getPlate() << "|"  
+        outFile << v->getPlate()<< "|" 
+                << v->getModel() << "|"  
                 << v->getRate() << "|"   
                 << v->getRentedStatus() << "\n";
     }

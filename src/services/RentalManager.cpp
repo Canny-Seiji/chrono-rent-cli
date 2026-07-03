@@ -27,6 +27,10 @@ void RentalManager::saveRentals(const std::string& filename) const {
     }
 }
 
+void RentalManager::addRentalRecord(const RentalRecord& record) {
+    activeRentals.push_back(record);
+}
+
 void RentalManager::loadRentals(const std::string& filename, Inventory& inv) {
     std::ifstream inFile(filename);
     std::string line;
@@ -48,9 +52,9 @@ void RentalManager::returnVehicle(const std::string& plate) {
         if (activeRentals[i].vehicle->getPlate() == plate) {
             activeRentals[i].vehicle->setRentedStatus(false);
             activeRentals.erase(activeRentals.begin() + i);
-            std::cout << "Vehicle " << plate << " returned successfully.\n";
+            std::cout << Colors::GREEN << "Vehicle " << plate << " returned successfully.\n" << Colors::RESET;
             return;
         }
     }
-    std::cout << "Error: Rental record not found for plate: " << plate << "\n";
+    std::cout << Colors::RED << "Error: Rental record not found for plate: " << plate << "\n" << Colors::RESET;
 }

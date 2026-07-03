@@ -16,7 +16,8 @@ public:
     void processRental(Customer c, std::string plate, Inventory& inv);
     void addToWaitlist(Customer c);
     void returnVehicle(const std::string& plate);
-    
+    void addRentalRecord(const RentalRecord& record);
+        
     void saveRentals(const std::string& filename) const;
     void loadRentals(const std::string& filename, Inventory& inv);
 

@@ -51,6 +51,7 @@ int main() {
                 custRegistry.addCustomer(newCust);
                 vehiclePtr->setRentedStatus(true);
 
+                myManager.addRentalRecord(RentalRecord("TX-001", newCust, vehiclePtr));
                 std::cout << "Rental successful! Customer ID: " << id << "\n";
                 break;
             }
