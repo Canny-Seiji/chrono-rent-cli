@@ -1,9 +1,9 @@
 #include <iostream>
-#include "services/Inventory.hpp"
-#include "services/RentalManager.hpp"
-#include "services/Analytics.hpp"
-#include "services/CustomerManager.hpp"
-#include "utils/Parser.hpp"
+#include "../include/services/Inventory.hpp"
+#include "../include/services/RentalManager.hpp"
+#include "../include/services/Analytics.hpp"
+#include "../include/services/CustomerManager.hpp"
+#include "../include/utils/Parser.hpp"
 
 int main() {
     Inventory myFleet;
@@ -17,7 +17,7 @@ int main() {
     
     do {
         std::cout << "\n--- ChronoRent System ---\n";
-        std::cout << "1. Rent Vehicle\n2. View Fleet\n3. Return Vehicle\n4. View Reports\n5. Add Vehicle\n0. Exit\n";
+        std::cout << "1. Rent Vehicle\n2. View Fleet\n3. Return Vehicle\n4. View Customers\n5. Add Vehicle\n0. Exit\n";
         
         choice = Parser::getValidInt("Select operation: ", 0, 5);
 
@@ -40,6 +40,7 @@ int main() {
                 std::string lName = Parser::getValidName("Last Name: ");           if(lName.empty())   { std::cout << Colors::YELLOW << "Rental process cancelled.\n" << Colors::RESET; break; }
                 std::string license = Parser::getValidLicense("License Number: "); if(license.empty()) { std::cout << Colors::YELLOW << "Rental process cancelled.\n" << Colors::RESET; break; }
                 std::string contact = Parser::getValidContact("Contact Number: "); if(contact.empty()) { std::cout << Colors::YELLOW << "Rental process cancelled.\n" << Colors::RESET; break; }
+                int rentalDays = Parser::getValidInt("Rental duration in days: ", 1, 365);
 
                 std::string id = custRegistry.generateUniqueId(fName, mName, lName);
                 Customer newCust(id, fName, mName, lName, license, contact);
@@ -47,12 +48,14 @@ int main() {
                 newCust.rental.isRenting = true;
                 newCust.rental.vehicle = vehiclePtr;
                 newCust.rental.rentStartTime = std::time(nullptr);
+                newCust.rental.expectedReturnTime = newCust.rental.rentStartTime + (rentalDays * 86400);
 
                 custRegistry.addCustomer(newCust);
                 vehiclePtr->setRentedStatus(true);
 
                 myManager.addRentalRecord(RentalRecord("TX-001", newCust, vehiclePtr));
                 std::cout << "Rental successful! Customer ID: " << id << "\n";
+                std::cout << "Estimated charge: " << newCust.rental.calculateCurrentCharge() << "\n";
                 break;
             }
             case 2: // View Fleet
@@ -67,16 +70,18 @@ int main() {
                     break;
                 }
 
-                myManager.returnVehicle(plate);
+                if (myManager.returnVehicle(plate)) {
+                    custRegistry.endRentalByPlate(plate);
+                }
                 break;
             }
             
-            case 4: { // Reports
-                std::cout << "\n--- Analytics Report ---\n";
+            case 4: { // View Customers
+                custRegistry.displayDashboard(myFleet.getVehicleCount());
                 std::cout << "Sort by:\n";
-                std::cout << "1. Latest Customers\n";
-                std::cout << "2. Currently Renting\n";
-                std::cout << "3. Rental Rate (High-Low)\n";
+                std::cout << "1. Name\n";
+                std::cout << "2. Status\n";
+                std::cout << "3. Rental Expense\n";
                 
                 int sortChoice = Parser::getValidInt("Choice (1-3): ", 1, 3);
                 

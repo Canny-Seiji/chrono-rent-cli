@@ -14,6 +14,9 @@ struct RentalInfo {
     std::time_t expectedReturnTime = 0;
 
     double getHoursRemaining() const;
+    double getHoursOverdue() const;
+    int getRentalDays() const;
+    double calculateCurrentCharge() const;
 };
 
 class Customer {

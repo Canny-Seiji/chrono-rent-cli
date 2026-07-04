@@ -1,5 +1,5 @@
-#include "services/Inventory.hpp"
-#include "utils/Parser.hpp"
+#include "../../include/services/Inventory.hpp"
+#include "../../include/utils/Parser.hpp"
 
 Inventory::~Inventory() {
     for (auto v : fleet) delete v; 
@@ -68,6 +68,10 @@ void Inventory::displayFleet() const {
         std::cout << statusColor << std::setw(wStatus) << statusStr << Colors::RESET;
         std::cout << std::setw(wRate) << rateStr << "\n";
     }
+}
+
+int Inventory::getVehicleCount() const {
+    return static_cast<int>(fleet.size());
 }
 
 void Inventory::saveToFile(const std::string& filename) const {

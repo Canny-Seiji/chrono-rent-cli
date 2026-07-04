@@ -1,4 +1,4 @@
-#include "utils/Parser.hpp"
+#include "../../include/utils/Parser.hpp"
 using namespace std;
 
 // High-level clean split using string streams
@@ -50,20 +50,20 @@ bool Parser::isAlphaNum(const string& str) {
     return true;
 }
 
-bool Parser::idExists(const vector<Customer>& customers, const string& id) {
+bool Parser::idExists(const list<Customer>& customers, const string& id) {
     string idUpper = toUpper(id);
     for (const auto& c : customers)
         if (toUpper(c.id) == idUpper) return true;
     return false;
 }
 
-void Parser::sortCustomers(vector<Customer>& customers) {
-    sort(customers.begin(), customers.end(), [](const Customer& a, const Customer& b){
+void Parser::sortCustomers(list<Customer>& customers) {
+    customers.sort([](const Customer& a, const Customer& b){
         return a.getFullName() < b.getFullName();
     });
 }
 
-std::string Parser::findUniqueId(const std::string& baseId, int counter, const std::vector<Customer>& customers) {
+std::string Parser::findUniqueId(const std::string& baseId, int counter, const std::list<Customer>& customers) {
     std::string candidateId = (counter == 1) ? baseId : baseId + std::to_string(counter);
     if (!idExists(customers, candidateId)) {
         return candidateId;
@@ -71,7 +71,7 @@ std::string Parser::findUniqueId(const std::string& baseId, int counter, const s
     return findUniqueId(baseId, counter + 1, customers);
 }
 
-string Parser::generateCustomerId(const string& firstName, const string& middleName, const string& lastName, const vector<Customer>& customers) {
+string Parser::generateCustomerId(const string& firstName, const string& middleName, const string& lastName, const list<Customer>& customers) {
     string baseId;
     if (!firstName.empty())
         baseId += static_cast<char>(toupper(static_cast<unsigned char>(firstName[0])));

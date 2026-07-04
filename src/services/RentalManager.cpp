@@ -1,10 +1,15 @@
-#include "services/RentalManager.hpp"
+#include "../../include/services/RentalManager.hpp"
+#include <iomanip>
 #include <iostream>
 
 void RentalManager::processRental(Customer c, std::string plate, Inventory& inv) {
     Vehicle* v = inv.findVehicle(plate);
     if (v && !v->getRentedStatus()) {
         v->setRentedStatus(true);
+        c.rental.isRenting = true;
+        c.rental.vehicle = v;
+        c.rental.rentStartTime = std::time(nullptr);
+        c.rental.expectedReturnTime = c.rental.rentStartTime + 86400;
         activeRentals.emplace_back("TX-001", c, v);
         std::cout << "Rental successful for: " << c.getFullName() << "\n";
     } else {
@@ -47,14 +52,22 @@ void RentalManager::loadRentals(const std::string& filename, Inventory& inv) {
     }
 }
 
-void RentalManager::returnVehicle(const std::string& plate) {
-    for (size_t i = 0; i < activeRentals.size(); ++i) {
-        if (activeRentals[i].vehicle->getPlate() == plate) {
-            activeRentals[i].vehicle->setRentedStatus(false);
-            activeRentals.erase(activeRentals.begin() + i);
+bool RentalManager::returnVehicle(const std::string& plate) {
+    for (auto it = activeRentals.begin(); it != activeRentals.end(); ++it) {
+        if (it->vehicle->getPlate() == plate) {
+            double totalCharge = it->customer.rental.calculateCurrentCharge();
+            double overdueHours = it->customer.rental.getHoursOverdue();
+
+            it->vehicle->setRentedStatus(false);
+            activeRentals.erase(it);
+
             std::cout << Colors::GREEN << "Vehicle " << plate << " returned successfully.\n" << Colors::RESET;
-            return;
+            std::cout << std::fixed << std::setprecision(2)
+                      << "Overdue hours: " << overdueHours << "\n"
+                      << "Total charge: " << totalCharge << "\n";
+            return true;
         }
     }
     std::cout << Colors::RED << "Error: Rental record not found for plate: " << plate << "\n" << Colors::RESET;
+    return false;
 }

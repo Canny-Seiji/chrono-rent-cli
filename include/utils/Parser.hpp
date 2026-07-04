@@ -1,14 +1,15 @@
 #ifndef PARSER_H
 #define PARSER_H
 
-#include "services/Inventory.hpp"
-#include "models/Customer.hpp"
-#include "utils/Colors.hpp"
+#include "../services/Inventory.hpp"
+#include "../models/Customer.hpp"
+#include "Colors.hpp"
 #include <iostream>
 #include <sstream>
 #include <algorithm>
 #include <string>
 #include <vector>
+#include <list>
 #include <limits>
 #include <cctype>
 class Customer;
@@ -27,7 +28,7 @@ public:
     static void clearInputBuffer();
     static bool isAlpha(const std::string& str);
     static bool isAlphaNum(const std::string& str);
-    static bool idExists(const std::vector<Customer>& customers, const std::string& id);
+    static bool idExists(const std::list<Customer>& customers, const std::string& id);
     static bool isValidPlate(const std::string& plate);
     static bool isValidLicense(const std::string& license);
     static bool isValidContact(const std::string& contact);
@@ -40,9 +41,9 @@ public:
     static std::string getExistingPlate(Inventory& fleet);
 
     // Sorting & Generators
-    static void sortCustomers(std::vector<Customer>& customers);
-    static std::string findUniqueId(const std::string& baseId, int counter, const std::vector<Customer>& customers);
-    static std::string generateCustomerId(const std::string& firstName, const std::string& middleName, const std::string& lastName, const std::vector<Customer>& customers);
+    static void sortCustomers(std::list<Customer>& customers);
+    static std::string findUniqueId(const std::string& baseId, int counter, const std::list<Customer>& customers);
+    static std::string generateCustomerId(const std::string& firstName, const std::string& middleName, const std::string& lastName, const std::list<Customer>& customers);
 };
 
 #endif
