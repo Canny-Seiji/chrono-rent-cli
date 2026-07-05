@@ -54,8 +54,8 @@ int main() {
                 vehiclePtr->setRentedStatus(true);
 
                 myManager.addRentalRecord(RentalRecord("TX-001", newCust, vehiclePtr));
-                std::cout << "Rental successful! Customer ID: " << id << "\n";
-                std::cout << "Estimated charge: " << newCust.rental.calculateCurrentCharge() << "\n";
+                std::cout << Colors::GREEN << "Rental successful!" << Colors::RESET << " Customer ID: " << id << "\n";
+                std::cout << "Estimated charge: " << Colors::BLUE << newCust.rental.calculateCurrentCharge() << "\n" << Colors::RESET;
                 break;
             }
             case 2: // View Fleet
