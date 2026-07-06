@@ -20,7 +20,7 @@ int main() {
         std::cout << "\n--- ChronoRent System ---\n";
         std::cout << "1. Rent Vehicle\n2. View Fleet\n3. Return Vehicle\n4. View Customers\n5. Add Vehicle\n0. Exit\n";
         
-        choice = Parser::getValidInt("Select operation: ", 0, 5);
+        choice = Parser::getValidInt("Select operation (0-5): ", 0, 5);
 
         switch (choice) {
             case 1: { // Rent Vehicle
@@ -32,16 +32,16 @@ int main() {
 
                 Vehicle* vehiclePtr = myFleet.findVehicle(plate);
                 if (vehiclePtr->getRentedStatus()) {
-                    std::cout << "Vehicle aalready rented!\n";
+                    std::cout << "Vehicle already rented!\n";
                     break;
                 }
 
-                std::string fName = Parser::getValidName("First Name: ");          if(fName.empty())   { std::cout << Colors::YELLOW << "Rental process cancelled.\n" << Colors::RESET; break; }
-                std::string mName = Parser::getValidName("Middle Name: ");         if(mName.empty())   { std::cout << Colors::YELLOW << "Rental process cancelled.\n" << Colors::RESET; break; }
-                std::string lName = Parser::getValidName("Last Name: ");           if(lName.empty())   { std::cout << Colors::YELLOW << "Rental process cancelled.\n" << Colors::RESET; break; }
-                std::string license = Parser::getValidLicense("License Number: "); if(license.empty()) { std::cout << Colors::YELLOW << "Rental process cancelled.\n" << Colors::RESET; break; }
-                std::string contact = Parser::getValidContact("Contact Number: "); if(contact.empty()) { std::cout << Colors::YELLOW << "Rental process cancelled.\n" << Colors::RESET; break; }
-                int rentalDays = Parser::getValidInt("Rental duration in days: ", 1, 365);
+                std::string fName = Parser::getValidName("First Name (letters only, e.g., Juan): ");          if(fName.empty())   { std::cout << Colors::YELLOW << "Rental process cancelled.\n" << Colors::RESET; break; }
+                std::string mName = Parser::getValidName("Middle Name (letters only, e.g., Santos): ");       if(mName.empty())   { std::cout << Colors::YELLOW << "Rental process cancelled.\n" << Colors::RESET; break; }
+                std::string lName = Parser::getValidName("Last Name (letters only, e.g., Dela Cruz): ");      if(lName.empty())   { std::cout << Colors::YELLOW << "Rental process cancelled.\n" << Colors::RESET; break; }
+                std::string license = Parser::getValidLicense("License Number (11 chars: 1 letter + 10 digits, e.g., A1234567890): "); if(license.empty()) { std::cout << Colors::YELLOW << "Rental process cancelled.\n" << Colors::RESET; break; }
+                std::string contact = Parser::getValidContact("Contact Number (11 digits, e.g., 09123456789): "); if(contact.empty()) { std::cout << Colors::YELLOW << "Rental process cancelled.\n" << Colors::RESET; break; }
+                int rentalDays = Parser::getValidInt("Rental duration in days (1-365): ", 1, 365);
 
                 std::string id = custRegistry.generateUniqueId(fName, mName, lName);
                 Customer newCust(id, fName, mName, lName, license, contact);
@@ -93,9 +93,9 @@ int main() {
             }
             
             case 5: { // Add Vehicle
-                std::string model = Parser::getValidName("Enter Model: ");
-                std::string plate = Parser::getValidPlate("Enter New Vehicle Plate (e.g., ABC1234): ");
-                double rate = Parser::getValidDouble("Enter Daily Rental Rate: ", 8000.00);
+                std::string model = Parser::getValidName("Enter Model (letters/numbers allowed, e.g., Toyota Vios): ");
+                std::string plate = Parser::getValidPlate("Enter New Vehicle Plate (7 chars: 3 letters + 4 digits, e.g., ABC1234): ");
+                double rate = Parser::getValidDouble("Enter Daily Rental Rate (minimum 8000.00): ", 8000.00);
                 
                 myFleet.addVehicle(new Car(model, plate, rate));
                 std::cout << "Vehicle added successfully.\n";
