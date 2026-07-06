@@ -12,23 +12,27 @@ vector<string> Parser::split(const string& str, char delimiter) {
     return tokens;
 }
 
+// Clear the input buffer to avoid issues with leftover input
 void Parser::clearInputBuffer() {
     cin.clear();
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
 }
 
+// Converts a string to uppercase
 string Parser::toUpper(string str) {
     for (char& c : str)
         c = static_cast<char>(toupper(static_cast<unsigned char>(c)));
     return str;
 }
 
+// Converts a string to lowercase
 string Parser::toLower(string str) {
     for (char& c : str)
         c = static_cast<char>(tolower(static_cast<unsigned char>(c)));
     return str;
 }
 
+// Trims leading and trailing whitespace from a string
 string Parser::trim(const string& str) {
     size_t start = str.find_first_not_of(" \t\n\r");
     size_t end   = str.find_last_not_of(" \t\n\r");
@@ -36,6 +40,7 @@ string Parser::trim(const string& str) {
     return str.substr(start, end - start + 1);
 }
 
+// Validates if a string contains only alphabetic characters, hyphens, apostrophes, or spaces
 bool Parser::isAlpha(const string& str) {
     for (char c : str)
         if (!isalpha(static_cast<unsigned char>(c)) && c != '-' && c != '\'' && c != ' ')
@@ -43,6 +48,7 @@ bool Parser::isAlpha(const string& str) {
     return true;
 }
 
+// Validates if a string contains only alphanumeric characters, hyphens, apostrophes, or spaces
 bool Parser::isAlphaNum(const string& str) {
     for (char c : str)
         if (!isalnum(static_cast<unsigned char>(c)) && c != '-' && c != '\'' && c != ' ')
@@ -50,6 +56,7 @@ bool Parser::isAlphaNum(const string& str) {
     return true;
 }
 
+// Checks if a given customer ID already exists in the list of customers
 bool Parser::idExists(const list<Customer>& customers, const string& id) {
     string idUpper = toUpper(id);
     for (const auto& c : customers)
@@ -57,12 +64,14 @@ bool Parser::idExists(const list<Customer>& customers, const string& id) {
     return false;
 }
 
+// Sorts the list of customers by their full names in ascending order
 void Parser::sortCustomers(list<Customer>& customers) {
     customers.sort([](const Customer& a, const Customer& b){
         return a.getFullName() < b.getFullName();
     });
 }
 
+// Recursively finds a unique customer ID based on a base ID and a counter
 std::string Parser::findUniqueId(const std::string& baseId, int counter, const std::list<Customer>& customers) {
     std::string candidateId = (counter == 1) ? baseId : baseId + std::to_string(counter);
     if (!idExists(customers, candidateId)) {
@@ -71,6 +80,7 @@ std::string Parser::findUniqueId(const std::string& baseId, int counter, const s
     return findUniqueId(baseId, counter + 1, customers);
 }
 
+// Generates a customer ID based on the first, middle, and last names, ensuring uniqueness
 string Parser::generateCustomerId(const string& firstName, const string& middleName, const string& lastName, const list<Customer>& customers) {
     string baseId;
     if (!firstName.empty())
@@ -86,6 +96,7 @@ string Parser::generateCustomerId(const string& firstName, const string& middleN
     return findUniqueId(baseId, 1, customers);
 }
 
+// Validates if a vehicle plate number is in the correct format (3 letters followed by 4 digits)
 bool Parser::isValidPlate(const std::string& plate) {
     // 1. Length check: Must be exactly 7 characters
     if (plate.length() != 7) return false;
@@ -101,6 +112,7 @@ bool Parser::isValidPlate(const std::string& plate) {
     return true;
 }
 
+// Validates if a driver's license number is in the correct format (1 letter followed by 10 digits)
 bool Parser::isValidLicense(const std::string& license) {
     if (license.length() != 11) return false;
     
@@ -112,6 +124,7 @@ bool Parser::isValidLicense(const std::string& license) {
     return true;
 }
 
+// Validates if a contact number is in the correct format (exactly 11 digits)
 bool Parser::isValidContact(const std::string& contact) {
     if (contact.length() != 11) return false;
     for (char c : contact) {
@@ -120,6 +133,7 @@ bool Parser::isValidContact(const std::string& contact) {
     return true;
 }
 
+// Prompts the user for a valid integer input within a specified range, with error handling
 int Parser::getValidInt(const string& prompt, int min, int max) {
     int value;
     while (true) {
@@ -138,6 +152,7 @@ int Parser::getValidInt(const string& prompt, int min, int max) {
     }
 }
 
+// Prompts the user for a valid double input greater than or equal to a specified minimum, with error handling
 double Parser::getValidDouble(const std::string& prompt, double min) {
     double value;
     while (true) {
@@ -156,6 +171,7 @@ double Parser::getValidDouble(const std::string& prompt, double min) {
     }
 }
 
+// Prompts the user for a valid vehicle plate number, ensuring it meets the required format
 std::string Parser::getValidPlate(const std::string& prompt) {
     std::string plate;
     while (true) {
@@ -177,6 +193,7 @@ std::string Parser::getValidPlate(const std::string& prompt) {
     }
 }
 
+// Prompts the user for a valid name input, ensuring it contains only letters, hyphens, apostrophes, or spaces
 std::string Parser::getValidName(const std::string& prompt) {
     std::string input;
     while (true) {
@@ -201,6 +218,7 @@ std::string Parser::getValidName(const std::string& prompt) {
     }
 }
 
+// Prompts the user for a valid driver's license number, ensuring it meets the required format
 std::string Parser::getValidLicense(const std::string& prompt) {
     std::string input;
     while (true) {
@@ -226,6 +244,7 @@ std::string Parser::getValidLicense(const std::string& prompt) {
     }
 }
 
+// Prompts the user for a valid contact number, ensuring it meets the required format
 std::string Parser::getValidContact(const std::string& prompt) {
     std::string input;
     while (true) {
@@ -250,6 +269,8 @@ std::string Parser::getValidContact(const std::string& prompt) {
         }
     }
 }
+
+// Prompts the user for an existing vehicle plate number from the inventory, ensuring it meets the required format and exists in the fleet
 std::string Parser::getExistingPlate(Inventory& fleet) {
     std::string plate;
     

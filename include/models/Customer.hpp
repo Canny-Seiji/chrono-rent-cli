@@ -4,7 +4,6 @@
 #include <string>
 #include <ctime>
 
-// Forward declaration to avoid circular dependencies
 class Vehicle; 
 
 struct RentalInfo {

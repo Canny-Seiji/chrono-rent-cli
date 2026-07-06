@@ -10,6 +10,7 @@ int main() {
     RentalManager myManager;
     CustomerManager custRegistry;
 
+    // Load existing data from files
     myFleet.loadFromFile("data/fleet.txt");
     myManager.loadRentals("data/rentals.txt", myFleet);
 
@@ -31,7 +32,7 @@ int main() {
 
                 Vehicle* vehiclePtr = myFleet.findVehicle(plate);
                 if (vehiclePtr->getRentedStatus()) {
-                    std::cout << "Vehicle already rented!\n";
+                    std::cout << "Vehicle aalready rented!\n";
                     break;
                 }
 
@@ -55,7 +56,7 @@ int main() {
 
                 myManager.addRentalRecord(RentalRecord("TX-001", newCust, vehiclePtr));
                 std::cout << Colors::GREEN << "Rental successful!" << Colors::RESET << " Customer ID: " << id << "\n";
-                std::cout << "Estimated charge: " << Colors::BLUE << newCust.rental.calculateCurrentCharge() << "\n" << Colors::RESET;
+                std::cout << "Estimated charge: " << Colors::YELLOW << newCust.rental.calculateCurrentCharge() << "\n" << Colors::RESET;
                 break;
             }
             case 2: // View Fleet
@@ -110,7 +111,7 @@ int main() {
         }
     } while (choice != 0);
 
-    // 2. SAVE DATA BEFORE EXIT
+    // Save data before exiting
     myFleet.saveToFile("data/fleet.txt");
     myManager.saveRentals("data/rentals.txt");
     
