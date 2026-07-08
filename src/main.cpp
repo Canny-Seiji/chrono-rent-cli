@@ -17,7 +17,9 @@ int main() {
     int choice = 0;
     
     do {
-        std::cout << "\n--- ChronoRent System ---\n";
+        std::cout << Colors::YELLOW << "\n=================================================\n" << Colors::RESET;
+        std::cout << Colors::YELLOW << "        ChronoRent Vehicle Rental System " << Colors::RESET;
+        std::cout << Colors::YELLOW << "\n=================================================\n" << Colors::RESET;
         std::cout << "1. Rent Vehicle\n2. View Fleet\n3. Return Vehicle\n4. View Customers\n5. Add Vehicle\n0. Exit\n";
         
         choice = Parser::getValidInt("Select operation (0-5): ", 0, 5);
@@ -115,6 +117,6 @@ int main() {
     myFleet.saveToFile("data/fleet.txt");
     myManager.saveRentals("data/rentals.txt");
     
-    std::cout << "Data saved. Goodbye!\n";
+    std::cout << Colors::GREEN << "Data has been saved.\n" << Colors::RESET;
     return 0;
 }
