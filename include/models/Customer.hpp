@@ -6,6 +6,7 @@
 
 class Vehicle; 
 
+// RentalInfo struct to hold rental-related information for a customer
 struct RentalInfo {
     bool isRenting = false;
     Vehicle* vehicle = nullptr;
@@ -18,6 +19,7 @@ struct RentalInfo {
     double calculateCurrentCharge() const;
 };
 
+// Customer class to represent a customer in the rental system
 class Customer {
 public:
     std::string id, fName, mName, lName, license, contact;

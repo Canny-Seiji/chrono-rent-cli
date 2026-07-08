@@ -2,6 +2,7 @@
 #include <iomanip>
 #include <iostream>
 
+// Processes a rental for a customer, checking vehicle availability and updating records
 void RentalManager::processRental(Customer c, std::string plate, Inventory& inv) {
     Vehicle* v = inv.findVehicle(plate);
     if (v && !v->getRentedStatus()) {
@@ -13,15 +14,11 @@ void RentalManager::processRental(Customer c, std::string plate, Inventory& inv)
         activeRentals.emplace_back("TX-001", c, v);
         std::cout << "Rental successful for: " << c.getFullName() << "\n";
     } else {
-        std::cout << "Vehicle unavailable or not found. Adding to waitlist...\n";
-        addToWaitlist(c);
+        std::cout << "Vehicle not available for rental.\n";
     }
 }
 
-void RentalManager::addToWaitlist(Customer c) {
-    waitlist.push(c);
-}
-
+// Saves the active rental records to a file
 void RentalManager::saveRentals(const std::string& filename) const {
     std::ofstream outFile(filename);
     for (const auto& record : activeRentals) {
@@ -32,10 +29,12 @@ void RentalManager::saveRentals(const std::string& filename) const {
     }
 }
 
+// Loads rental records from a file and associates them with vehicles in the inventory
 void RentalManager::addRentalRecord(const RentalRecord& record) {
     activeRentals.push_back(record);
 }
 
+// Loads rental records from a file and associates them with vehicles in the inventory
 void RentalManager::loadRentals(const std::string& filename, Inventory& inv) {
     std::ifstream inFile(filename);
     std::string line;
@@ -44,14 +43,13 @@ void RentalManager::loadRentals(const std::string& filename, Inventory& inv) {
         if (data.size() == 3) {
             Vehicle* v = inv.findVehicle(data[2]);
             if (v) {
-                // Here you would typically reconstruct the customer object
-                // For simplicity in this lab, we link the existing vehicle
                 activeRentals.emplace_back(data[0], Customer("","","","", "", ""), v);
             }
         }
     }
 }
 
+// Returns a pointer to a rental record by its ID, or nullptr if not found
 bool RentalManager::returnVehicle(const std::string& plate) {
     for (auto it = activeRentals.begin(); it != activeRentals.end(); ++it) {
         if (it->vehicle->getPlate() == plate) {

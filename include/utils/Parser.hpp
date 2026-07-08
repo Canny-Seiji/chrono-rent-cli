@@ -14,6 +14,7 @@
 #include <cctype>
 class Customer;
 
+// Parser class to handle input parsing, validation, and utility functions
 class Parser {
 public:
     // File Parsing

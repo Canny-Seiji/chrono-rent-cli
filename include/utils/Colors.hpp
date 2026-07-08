@@ -3,6 +3,7 @@
 
 #include <string>
 
+// Colors namespace to define ANSI color codes for console output
 namespace Colors {
     const std::string RED = "\033[31m";
     const std::string GREEN = "\033[32m";

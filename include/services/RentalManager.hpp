@@ -7,6 +7,7 @@
 #include <queue>
 #include <list>
 
+// RentalManager class to manage rental operations in the system
 class RentalManager {
 private:
     std::list<RentalRecord> activeRentals;
@@ -14,7 +15,6 @@ private:
 
 public:
     void processRental(Customer c, std::string plate, Inventory& inv);
-    void addToWaitlist(Customer c);
     bool returnVehicle(const std::string& plate);
     void addRentalRecord(const RentalRecord& record);
         

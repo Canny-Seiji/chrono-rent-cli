@@ -4,6 +4,7 @@
 #include "Customer.hpp"
 #include "Vehicle.hpp"
 
+// RentalRecord class to represent a rental transaction in the system
 class RentalRecord {
 public:
     std::string recordId;

@@ -5,6 +5,7 @@
 #include <algorithm>
 #include "../models/Customer.hpp"
 
+// CustomerManager class to manage customer-related operations in the rental system
 class CustomerManager {
 private:
     std::list<Customer> customers;

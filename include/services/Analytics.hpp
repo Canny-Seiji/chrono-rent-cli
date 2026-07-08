@@ -4,6 +4,7 @@
 #include "../models/RentalRecord.hpp"
 #include <list>
 
+// Analytics class to provide analytical functionalities for rental records
 class Analytics {
 public:
     // Uses a sorting algorithm to rank by performance/usage

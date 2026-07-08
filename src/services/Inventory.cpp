@@ -1,12 +1,15 @@
 #include "../../include/services/Inventory.hpp"
 #include "../../include/utils/Parser.hpp"
 
+// Destructor for the Inventory class, deletes all vehicles in the fleet to free memory
 Inventory::~Inventory() {
     for (auto v : fleet) delete v; 
 }
 
+// Adds a new vehicle to the fleet
 void Inventory::addVehicle(Vehicle* v) { fleet.push_back(v); }
 
+// Finds a vehicle in the fleet by its plate number and returns a pointer to it, or nullptr if not found
 Vehicle* Inventory::findVehicle(const std::string& plate) {
     for (auto v : fleet) {
         if (v->getPlate() == plate) return v;
@@ -14,6 +17,7 @@ Vehicle* Inventory::findVehicle(const std::string& plate) {
     return nullptr;
 }
 
+// Displays the current fleet of vehicles in a formatted table
 void Inventory::displayFleet() const {
     if (fleet.empty()) {
         std::cout << "Fleet is currently empty.\n";
@@ -70,10 +74,12 @@ void Inventory::displayFleet() const {
     }
 }
 
+// Returns the total number of vehicles in the fleet
 int Inventory::getVehicleCount() const {
     return static_cast<int>(fleet.size());
 }
 
+// Saves the fleet data to a file
 void Inventory::saveToFile(const std::string& filename) const {
     std::ofstream outFile(filename);
     if (!outFile) return; 
@@ -87,6 +93,7 @@ void Inventory::saveToFile(const std::string& filename) const {
     outFile.close();
 }
 
+// Loads the fleet data from a file
 void Inventory::loadFromFile(const std::string& filename) {
     std::ifstream inFile(filename);
     std::string line;

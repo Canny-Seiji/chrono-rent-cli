@@ -7,6 +7,7 @@
 #include <iostream>
 #include <iomanip>
 
+// Inventory class to manage the fleet of vehicles in the rental system
 class Inventory {
 private:
     std::list<Vehicle*> fleet;

@@ -3,6 +3,7 @@
 
 #include <string>
 
+// Vehicle class to represent a vehicle in the rental system
 class Vehicle {
 protected:
     std::string model;
@@ -23,6 +24,7 @@ public:
     virtual double calculateLateFee(int hours) const = 0; 
 };
 
+// Car class derived from Vehicle, representing a specific type of vehicle
 class Car : public Vehicle {
 public:
     Car(std::string m, std::string p, double r) : Vehicle(m, p, r) {}
