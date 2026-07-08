@@ -34,10 +34,7 @@ double Analytics::calculateNetRevenue(const std::list<Customer>& customers) {
     double netRevenue = 0.0;
 
     for (const auto& customer : customers) {
-        if (customer.rental.isRenting && customer.rental.vehicle != nullptr) {
-            double baseCharge = customer.rental.vehicle->getRate() * customer.rental.getRentalDays();
-            netRevenue += customer.rental.calculateCurrentCharge() - baseCharge;
-        }
+        netRevenue += customer.rental.getTotalCharge();
     }
 
     return netRevenue;
@@ -79,6 +76,6 @@ void Analytics::autoSaveCustomerReport(const std::string& filename, const std::l
                 << (hasActiveVehicle ? "Active" : "Inactive") << "|"
                 << formatDouble(customer.rental.getHoursRemaining()) << "|"
                 << formatDouble(hasActiveVehicle ? customer.rental.vehicle->getRate() : 0.0) << "|"
-                << formatDouble(customer.rental.calculateCurrentCharge()) << "\n";
+                << formatDouble(customer.rental.getTotalCharge()) << "\n";
     }
 }

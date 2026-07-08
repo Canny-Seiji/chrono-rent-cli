@@ -55,3 +55,7 @@ double RentalInfo::calculateCurrentCharge() const {
     int lateHours = static_cast<int>(std::ceil(getHoursOverdue()));
     return baseCharge + vehicle->calculateLateFee(lateHours);
 }
+
+double RentalInfo::getTotalCharge() const {
+    return completedCharge + calculateCurrentCharge();
+}

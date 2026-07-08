@@ -24,7 +24,7 @@ void CustomerManager::sortCustomers(int criteria) {
         if (criteria == 1) return a.getFullName() < b.getFullName();
         if (criteria == 2) return a.rental.isRenting > b.rental.isRenting;
         if (criteria == 3) {
-            return a.rental.calculateCurrentCharge() > b.rental.calculateCurrentCharge();
+            return a.rental.getTotalCharge() > b.rental.getTotalCharge();
         }
         return false;
     });
@@ -78,7 +78,7 @@ void CustomerManager::displayReport() const {
         std::string status = hasActiveVehicle ? "Active" : "Inactive";
         std::string remaining = formatDouble(c.rental.getHoursRemaining());
         std::string rate = formatDouble(hasActiveVehicle ? c.rental.vehicle->getRate() : 0.0);
-        std::string charge = formatDouble(c.rental.calculateCurrentCharge());
+        std::string charge = formatDouble(c.rental.getTotalCharge());
 
         wId = std::max(wId, c.id.length());
         wName = std::max(wName, c.getFullName().length());
@@ -110,16 +110,16 @@ void CustomerManager::displayReport() const {
     
     for (const auto& c : customers) {
         bool hasActiveVehicle = c.rental.isRenting && c.rental.vehicle != nullptr;
-        double currentCharge = c.rental.calculateCurrentCharge();
+        double totalCharge = c.rental.getTotalCharge();
         
         std::string plate = hasActiveVehicle ? c.rental.vehicle->getPlate() : "N/A";
         std::string status = hasActiveVehicle ? "Active" : "Inactive";
         std::string remaining = formatDouble(c.rental.getHoursRemaining());
         std::string rate = formatDouble(hasActiveVehicle ? c.rental.vehicle->getRate() : 0.0);
-        std::string charge = formatDouble(currentCharge);
+        std::string charge = formatDouble(totalCharge);
 
         std::string statusColor = hasActiveVehicle ? Colors::GREEN : Colors::RED;
-        std::string chargeColor = currentCharge < 0 ? Colors::RED : (currentCharge > 0 ? Colors::GREEN : Colors::RESET);
+        std::string chargeColor = totalCharge < 0 ? Colors::RED : (totalCharge > 0 ? Colors::GREEN : Colors::RESET);
 
         std::cout << std::left << std::setw(wId) << c.id
                   << std::setw(wName) << c.getFullName()
@@ -136,6 +136,7 @@ void CustomerManager::displayReport() const {
 void CustomerManager::endRentalByPlate(const std::string& plate) {
     for (auto& c : customers) {
         if (c.rental.isRenting && c.rental.vehicle && c.rental.vehicle->getPlate() == plate) {
+            c.rental.completedCharge += c.rental.calculateCurrentCharge();
             c.rental.isRenting = false;
             c.rental.vehicle = nullptr;
             return;
