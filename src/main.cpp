@@ -42,7 +42,15 @@ int main() {
                 std::string mName = Parser::getValidName("Middle Name (letters only, e.g., Santos): ");       if(mName.empty())   { std::cout << Colors::YELLOW << "Rental process cancelled.\n" << Colors::RESET; break; }
                 std::string lName = Parser::getValidName("Last Name (letters only, e.g., Dela Cruz): ");      if(lName.empty())   { std::cout << Colors::YELLOW << "Rental process cancelled.\n" << Colors::RESET; break; }
                 std::string license = Parser::getValidLicense("License Number (11 chars: 1 letter + 10 digits, e.g., A1234567890): "); if(license.empty()) { std::cout << Colors::YELLOW << "Rental process cancelled.\n" << Colors::RESET; break; }
-                std::string contact = Parser::getValidContact("Contact Number (11 digits, e.g., 09123456789): "); if(contact.empty()) { std::cout << Colors::YELLOW << "Rental process cancelled.\n" << Colors::RESET; break; }
+                std::string contact;
+                do {
+                    contact = Parser::getValidContact("Contact Number (unique, 11 digits, e.g., 09123456789): ");
+                    if(contact.empty()) { std::cout << Colors::YELLOW << "Rental process cancelled.\n" << Colors::RESET; break; }
+                    if(custRegistry.contactExists(contact)) {
+                        std::cout << Colors::RED << "Contact number already exists. Enter a unique contact number.\n" << Colors::RESET;
+                    }
+                } while (!contact.empty() && custRegistry.contactExists(contact));
+                if(contact.empty()) { break; }
                 int rentalDays = Parser::getValidInt("Rental duration in days (1-365): ", 1, 365);
 
                 std::string id = custRegistry.generateUniqueId(fName, mName, lName);

@@ -135,6 +135,15 @@ void CustomerManager::endRentalByPlate(const std::string& plate) {
     }
 }
 
+bool CustomerManager::contactExists(const std::string& contact) const {
+    for (const auto& c : customers) {
+        if (c.contact == contact) {
+            return true;
+        }
+    }
+    return false;
+}
+
 // Returns a reference to the list of customers
 std::list<Customer>& CustomerManager::getCustomers() {
     return customers;

@@ -20,6 +20,7 @@ public:
     void displayReport() const;
     void displayDashboard(int vehicleCount) const;
     void endRentalByPlate(const std::string& plate);
+    bool contactExists(const std::string& contact) const;
     std::list<Customer>& getCustomers(); 
 };
 

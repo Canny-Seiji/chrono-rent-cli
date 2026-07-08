@@ -154,19 +154,49 @@ int Parser::getValidInt(const string& prompt, int min, int max) {
 
 // Prompts the user for a valid double input greater than or equal to a specified minimum, with error handling
 double Parser::getValidDouble(const std::string& prompt, double min) {
-    double value;
+    std::string input;
     while (true) {
         std::cout << prompt;
-        if (std::cin >> value) {
-            if (value >= min) {
-                clearInputBuffer(); 
-                return value;
+        std::getline(std::cin, input);
+
+        std::string normalized;
+        bool hasDigit = false;
+        bool hasDecimal = false;
+        bool invalidCharacter = false;
+
+        for (char raw : input) {
+            unsigned char c = static_cast<unsigned char>(raw);
+
+            if (std::isdigit(c)) {
+                normalized += static_cast<char>(c);
+                hasDigit = true;
+            } else if (c == '.' && !hasDecimal) {
+                normalized += '.';
+                hasDecimal = true;
+            } else if ((c == '+' || c == '-') && normalized.empty()) {
+                normalized += static_cast<char>(c);
+            } else if (c == ',' || c == '$' || c == '?' || std::isspace(c) || c >= 128) {
+                continue;
+            } else if (c == 'P' || c == 'p' || c == 'H' || c == 'h') {
+                continue;
+            } else {
+                invalidCharacter = true;
+                break;
             }
-            std::cout << Colors::RED << "Rate must be at least " << min << Colors::RESET << "\n";
-            clearInputBuffer(); 
-        } else {
-            std::cout << Colors::RED << "Error: Invalid number format." << Colors::RESET << "\n";
-            clearInputBuffer(); 
+        }
+
+        try {
+            if (!invalidCharacter && hasDigit) {
+                double value = std::stod(normalized);
+                if (value >= min) {
+                    return value;
+                }
+                std::cout << Colors::RED << "Rate must be at least " << min << Colors::RESET << "\n";
+            } else {
+                std::cout << Colors::RED << "Error: Invalid number format. Examples: 10000, 10,000, PHP 10,000, or 10 000." << Colors::RESET << "\n";
+            }
+        } catch (...) {
+            std::cout << Colors::RED << "Error: Invalid number format. Examples: 10000, 10,000, PHP 10,000, or 10 000." << Colors::RESET << "\n";
         }
     }
 }
@@ -238,6 +268,7 @@ std::string Parser::getValidLicense(const std::string& prompt) {
         char choice;
         cout << "Would you like to try entering the license again? (y/n): ";
         std::cin >> choice;
+        clearInputBuffer();
         if (std::tolower(choice) != 'y') {
             return ""; 
         }
@@ -264,6 +295,7 @@ std::string Parser::getValidContact(const std::string& prompt) {
         char choice;
         cout << "Would you like to try entering the contact again? (y/n): ";
         std::cin >> choice;
+        clearInputBuffer();
         if (std::tolower(choice) != 'y') {
             return ""; 
         }
@@ -295,6 +327,7 @@ std::string Parser::getExistingPlate(Inventory& fleet) {
         std::cout << "Would you like to try entering the plate again? (y/n): ";
         char choice;
         std::cin >> choice;
+        clearInputBuffer();
 
         if (std::tolower(choice) != 'y') {
             return ""; 
