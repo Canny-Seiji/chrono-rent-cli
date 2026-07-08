@@ -53,7 +53,7 @@ void Analytics::autoSaveCustomerReport(const std::string& filename, const std::l
     outFile << "Number of active customers: " << activeCustomers << "\n";
     outFile << "Revenue: " << formatDouble(calculateRevenue(customers)) << "\n\n";
 
-    outFile << "-Customer list\n";
+    outFile << "---Customer list---\n";
     outFile << "ID|Name|Plate|Status|Remaining(hrs)|Rate|Charge\n";
 
     for (const auto& customer : customers) {

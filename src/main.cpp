@@ -93,7 +93,6 @@ int main() {
             case 4: { // View Customers
                 custRegistry.displayDashboard(myFleet.getVehicleCount());
                 custRegistry.displayReport();
-
                 break;
             }
             

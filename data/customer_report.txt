@@ -1,0 +1,10 @@
+---Dashboard---
+
+Number of cars: 3
+Number of customers: 1
+Number of active customers: 0
+Revenue: 0.00
+
+---Customer list---
+ID|Name|Plate|Status|Remaining(hrs)|Rate|Charge
+LOAD1|Kenji Celis Gan|N/A|Inactive|0.00|0.00|0.00

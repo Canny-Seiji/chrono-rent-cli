@@ -52,7 +52,7 @@ void CustomerManager::displayDashboard(int vehicleCount) const {
               << revenueColor << revenue << Colors::RESET << "\n\n";
 }
 
-// Ends the rental for a customer based on the provided vehicle plate number
+// Displays a detailed report of all customers, including their ID, name, vehicle plate, rental status, remaining hours, rate, and current charge
 void CustomerManager::displayReport() const {
     auto formatDouble = [](double value) {
         std::ostringstream out;
@@ -107,22 +107,26 @@ void CustomerManager::displayReport() const {
     for (const auto& c : customers) {
         bool hasActiveVehicle = c.rental.isRenting && c.rental.vehicle != nullptr;
         double currentCharge = c.rental.calculateCurrentCharge();
-        std::string chargeColor = currentCharge < 0 ? Colors::RED : (currentCharge > 0 ? Colors::GREEN : Colors::RESET);
+        
         std::string plate = hasActiveVehicle ? c.rental.vehicle->getPlate() : "N/A";
         std::string status = hasActiveVehicle ? "Active" : "Inactive";
         std::string remaining = formatDouble(c.rental.getHoursRemaining());
         std::string rate = formatDouble(hasActiveVehicle ? c.rental.vehicle->getRate() : 0.0);
         std::string charge = formatDouble(currentCharge);
 
+        std::string statusColor = hasActiveVehicle ? Colors::GREEN : Colors::RED;
+        std::string chargeColor = currentCharge < 0 ? Colors::RED : (currentCharge > 0 ? Colors::GREEN : Colors::RESET);
+
         std::cout << std::left << std::setw(wId) << c.id
                   << std::setw(wName) << c.getFullName()
-                  << std::setw(wPlate) << plate
-                  << std::setw(wStatus) << status
-                  << std::setw(wRemaining) << remaining
+                  << std::setw(wPlate) << plate;
+        std::cout << statusColor << std::setw(wStatus) << status << Colors::RESET;
+        std::cout << std::setw(wRemaining) << remaining
                   << std::setw(wRate) << rate
                   << chargeColor << std::setw(wCharge) << charge << Colors::RESET << "\n";
     }
 }
+
 
 // Ends the rental for a customer based on the provided vehicle plate number
 void CustomerManager::endRentalByPlate(const std::string& plate) {
