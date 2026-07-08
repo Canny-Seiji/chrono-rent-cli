@@ -9,6 +9,17 @@ Inventory::~Inventory() {
 // Adds a new vehicle to the fleet
 void Inventory::addVehicle(Vehicle* v) { fleet.push_back(v); }
 
+bool Inventory::removeVehicle(const std::string& plate) {
+    for (auto it = fleet.begin(); it != fleet.end(); ++it) {
+        if ((*it)->getPlate() == plate) {
+            delete *it;
+            fleet.erase(it);
+            return true;
+        }
+    }
+    return false;
+}
+
 // Finds a vehicle in the fleet by its plate number and returns a pointer to it, or nullptr if not found
 Vehicle* Inventory::findVehicle(const std::string& plate) {
     for (auto v : fleet) {

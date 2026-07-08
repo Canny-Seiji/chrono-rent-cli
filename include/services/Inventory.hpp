@@ -15,6 +15,7 @@ private:
 public:
     ~Inventory();
     void addVehicle(Vehicle* v);
+    bool removeVehicle(const std::string& plate);
     Vehicle* findVehicle(const std::string& plate);
     void displayFleet() const;
     int getVehicleCount() const;

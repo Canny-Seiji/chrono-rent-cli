@@ -13,6 +13,9 @@ int main() {
     // Load existing data from files
     myFleet.loadFromFile("data/fleet.txt");
     myManager.loadRentals("data/rentals.txt", myFleet);
+    for (const auto& record : myManager.getActiveRentals()) {
+        custRegistry.addCustomer(record.customer);
+    }
 
     int choice = 0;
     
@@ -20,9 +23,9 @@ int main() {
         std::cout << Colors::YELLOW << "\n=================================================\n" << Colors::RESET;
         std::cout << Colors::YELLOW << "        ChronoRent Vehicle Rental System " << Colors::RESET;
         std::cout << Colors::YELLOW << "\n=================================================\n" << Colors::RESET;
-        std::cout << "1. Rent Vehicle\n2. View Fleet\n3. Return Vehicle\n4. View Customers\n5. Add Vehicle\n0. Exit\n";
+        std::cout << "1. Rent Vehicle\n2. View Fleet\n3. Return Vehicle\n4. View Customers\n5. Add Vehicle\n6. Remove Vehicle\n0. Exit\n";
         
-        choice = Parser::getValidInt("Select operation (0-5): ", 0, 5);
+        choice = Parser::getValidInt("Select operation (0-6): ", 0, 6);
 
         switch (choice) {
             case 1: { // Rent Vehicle
@@ -89,16 +92,8 @@ int main() {
             
             case 4: { // View Customers
                 custRegistry.displayDashboard(myFleet.getVehicleCount());
-                std::cout << "Sort by:\n";
-                std::cout << "1. Name\n";
-                std::cout << "2. Status\n";
-                std::cout << "3. Rental Expense\n";
-                
-                int sortChoice = Parser::getValidInt("Choice (1-3): ", 1, 3);
-                
-                custRegistry.sortCustomers(sortChoice);
                 custRegistry.displayReport();
-                
+
                 break;
             }
             
@@ -111,7 +106,29 @@ int main() {
                 std::cout << "Vehicle added successfully.\n";
                 break;
             }
-            
+
+            case 6: { // Remove Vehicle
+                std::string plate = Parser::getExistingPlate(myFleet);
+
+                if (plate.empty()) {
+                    std::cout << Colors::YELLOW << "Remove vehicle process cancelled.\n" << Colors::RESET;
+                    break;
+                }
+
+                Vehicle* vehiclePtr = myFleet.findVehicle(plate);
+                if (vehiclePtr && vehiclePtr->getRentedStatus()) {
+                    std::cout << Colors::RED << "Cannot remove a rented vehicle. Return it first.\n" << Colors::RESET;
+                    break;
+                }
+
+                if (myFleet.removeVehicle(plate)) {
+                    std::cout << Colors::GREEN << "Vehicle " << plate << " removed from fleet.\n" << Colors::RESET;
+                } else {
+                    std::cout << Colors::RED << "Error: Vehicle " << plate << " could not be removed.\n" << Colors::RESET;
+                }
+                break;
+            }
+
             case 0:
                 std::cout << "Exiting system...\n";
                 break;
@@ -122,9 +139,12 @@ int main() {
     } while (choice != 0);
 
     // Save data before exiting
+    Analytics::sortByUsage(myManager.getActiveRentals());
     myFleet.saveToFile("data/fleet.txt");
     myManager.saveRentals("data/rentals.txt");
+    Analytics::autoSaveCustomerReport("data/customer_report.txt", custRegistry.getCustomers(), myFleet.getVehicleCount());
     
     std::cout << Colors::GREEN << "Data has been saved.\n" << Colors::RESET;
+    std::cout << Colors::GREEN << "Customer report has been auto-saved.\n" << Colors::RESET;
     return 0;
 }

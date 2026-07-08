@@ -38,12 +38,35 @@ void RentalManager::addRentalRecord(const RentalRecord& record) {
 void RentalManager::loadRentals(const std::string& filename, Inventory& inv) {
     std::ifstream inFile(filename);
     std::string line;
+    int loadedCount = 1;
+
     while (std::getline(inFile, line)) {
         std::vector<std::string> data = Parser::split(line, '|');
         if (data.size() == 3) {
             Vehicle* v = inv.findVehicle(data[2]);
             if (v) {
-                activeRentals.emplace_back(data[0], Customer("","","","", "", ""), v);
+                std::string customerName = data[1].empty() ? "Unknown Customer" : data[1];
+                std::vector<std::string> nameParts = Parser::split(customerName, ' ');
+
+                std::string firstName = nameParts.empty() ? "Unknown" : nameParts.front();
+                std::string middleName = "";
+                std::string lastName = nameParts.size() > 1 ? nameParts.back() : "Customer";
+
+                if (nameParts.size() > 2) {
+                    for (size_t i = 1; i + 1 < nameParts.size(); ++i) {
+                        if (!middleName.empty()) middleName += " ";
+                        middleName += nameParts[i];
+                    }
+                }
+
+                Customer loadedCustomer("LOAD" + std::to_string(loadedCount++), firstName, middleName, lastName, "", "");
+                loadedCustomer.rental.isRenting = true;
+                loadedCustomer.rental.vehicle = v;
+                loadedCustomer.rental.rentStartTime = std::time(nullptr);
+                loadedCustomer.rental.expectedReturnTime = loadedCustomer.rental.rentStartTime + 86400;
+
+                v->setRentedStatus(true);
+                activeRentals.emplace_back(data[0], loadedCustomer, v);
             }
         }
     }

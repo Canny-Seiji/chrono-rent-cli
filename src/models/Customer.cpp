@@ -9,7 +9,19 @@ Customer::Customer(std::string id, std::string f, std::string m, std::string l, 
     : id(id), fName(f), mName(m), lName(l), license(lic), contact(cont) {}
 
 std::string Customer::getFullName() const {
-    return fName + " " + mName + " " + lName;
+    std::string fullName = fName;
+
+    if (!mName.empty()) {
+        if (!fullName.empty()) fullName += " ";
+        fullName += mName;
+    }
+
+    if (!lName.empty()) {
+        if (!fullName.empty()) fullName += " ";
+        fullName += lName;
+    }
+
+    return fullName;
 }
 
 // RentalInfo methods to calculate rental-related information
