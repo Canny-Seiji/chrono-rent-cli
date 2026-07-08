@@ -14,6 +14,7 @@ public:
     // Uses a searching algorithm to find a specific transaction
     static RentalRecord* findRecordById(std::list<RentalRecord>& records, const std::string& id);
     static double calculateRevenue(const std::list<Customer>& customers);
+    static double calculateNetRevenue(const std::list<Customer>& customers);
     static void autoSaveCustomerReport(const std::string& filename, const std::list<Customer>& customers, int vehicleCount);
 };
 #endif

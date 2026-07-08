@@ -30,6 +30,19 @@ double Analytics::calculateRevenue(const std::list<Customer>& customers) {
     return revenue;
 }
 
+double Analytics::calculateNetRevenue(const std::list<Customer>& customers) {
+    double netRevenue = 0.0;
+
+    for (const auto& customer : customers) {
+        if (customer.rental.isRenting && customer.rental.vehicle != nullptr) {
+            double baseCharge = customer.rental.vehicle->getRate() * customer.rental.getRentalDays();
+            netRevenue += customer.rental.calculateCurrentCharge() - baseCharge;
+        }
+    }
+
+    return netRevenue;
+}
+
 void Analytics::autoSaveCustomerReport(const std::string& filename, const std::list<Customer>& customers, int vehicleCount) {
     std::ofstream outFile(filename);
     if (!outFile) return;
@@ -51,7 +64,8 @@ void Analytics::autoSaveCustomerReport(const std::string& filename, const std::l
     outFile << "Number of cars: " << vehicleCount << "\n";
     outFile << "Number of customers: " << customers.size() << "\n";
     outFile << "Number of active customers: " << activeCustomers << "\n";
-    outFile << "Revenue: " << formatDouble(calculateRevenue(customers)) << "\n\n";
+    outFile << "Revenue: " << formatDouble(calculateRevenue(customers)) << "\n";
+    outFile << "Net Revenue: " << formatDouble(calculateNetRevenue(customers)) << "\n\n";
 
     outFile << "---Customer list---\n";
     outFile << "ID|Name|Plate|Status|Remaining(hrs)|Rate|Charge\n";

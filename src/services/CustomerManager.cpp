@@ -1,4 +1,5 @@
 #include "../../include/services/CustomerManager.hpp"
+#include "../../include/services/Analytics.hpp"
 #include "../../include/utils/Colors.hpp"
 #include "../../include/utils/Parser.hpp"
 #include "../../include/models/Vehicle.hpp"
@@ -32,16 +33,17 @@ void CustomerManager::sortCustomers(int criteria) {
 // Displays a dashboard with the number of vehicles, customers, active customers, and total revenue
 void CustomerManager::displayDashboard(int vehicleCount) const {
     int activeCustomers = 0;
-    double revenue = 0.0;
 
     for (const auto& c : customers) {
         if (c.rental.isRenting) {
             ++activeCustomers;
-            revenue += c.rental.calculateCurrentCharge();
         }
     }
 
+    double revenue = Analytics::calculateRevenue(customers);
+    double netRevenue = Analytics::calculateNetRevenue(customers);
     std::string revenueColor = revenue < 0 ? Colors::RED : (revenue > 0 ? Colors::GREEN : Colors::RESET);
+    std::string netRevenueColor = netRevenue < 0 ? Colors::RED : (netRevenue > 0 ? Colors::GREEN : Colors::RESET);
 
     std::cout << "\n" << Colors::YELLOW << "---Dashboard---" << Colors::RESET << "\n\n";
     std::cout << Colors::YELLOW << "Number of cars: " << Colors::RESET << vehicleCount << "\n";
@@ -49,7 +51,9 @@ void CustomerManager::displayDashboard(int vehicleCount) const {
     std::cout << Colors::YELLOW << "Number of active customers: " << Colors::RESET << activeCustomers << "\n";
     std::cout << std::fixed << std::setprecision(2);
     std::cout << Colors::YELLOW << "Revenue: " << Colors::RESET
-              << revenueColor << revenue << Colors::RESET << "\n\n";
+              << revenueColor << revenue << Colors::RESET << "\n";
+    std::cout << Colors::YELLOW << "Net Revenue: " << Colors::RESET
+              << netRevenueColor << netRevenue << Colors::RESET << "\n\n";
 }
 
 // Displays a detailed report of all customers, including their ID, name, vehicle plate, rental status, remaining hours, rate, and current charge
