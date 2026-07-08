@@ -24,6 +24,22 @@ void Inventory::displayFleet() const {
         return;
     }
 
+    auto formatRate = [](int rate) {
+        std::string digits = std::to_string(rate);
+        std::string formatted;
+        int groupCount = 0;
+
+        for (auto it = digits.rbegin(); it != digits.rend(); ++it) {
+            if (groupCount > 0 && groupCount % 3 == 0) {
+                formatted.insert(formatted.begin(), ',');
+            }
+            formatted.insert(formatted.begin(), *it);
+            ++groupCount;
+        }
+
+        return "PHP " + formatted;
+    };
+
     // dynamic column widths
     size_t wNo = 5 + 5;
     size_t wModel = 5 + 5;
@@ -38,7 +54,7 @@ void Inventory::displayFleet() const {
         std::string statusStr = (v->getRentedStatus() ? "Rented" : "Available");
         wStatus = std::max(wStatus, statusStr.length() + 5);
 
-        std::string rateStr = "₱" + std::to_string((int)v->getRate());
+        std::string rateStr = formatRate(static_cast<int>(v->getRate()));
         wRate = std::max(wRate, rateStr.length() + 5);
     }
 
@@ -62,7 +78,7 @@ void Inventory::displayFleet() const {
         // Prepare data
         std::string statusStr = (v->getRentedStatus() ? "Rented" : "Available");
         std::string statusColor = (v->getRentedStatus() ? Colors::RED : Colors::GREEN);
-        std::string rateStr = "₱" + std::to_string((int)v->getRate());
+        std::string rateStr = formatRate(static_cast<int>(v->getRate()));
 
         // Print row
         std::cout << std::left
