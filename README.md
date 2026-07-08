@@ -85,9 +85,8 @@ Important result:
 8. Customer becomes inactive and the vehicle pointer is cleared.
 
 Important result:
-- Regular `Revenue` becomes `0.00` if no rentals are active.
-- `Net Revenue` still keeps accumulated completed charges.
-- Inactive customers keep their final charge in the customer list.
+- `Net Revenue` keeps accumulated completed charges.
+- Inactive customers keep their final charge, plate, and rate in the customer list.
 
 ### View Customers
 
@@ -96,12 +95,10 @@ Important result:
    - Number of cars
    - Number of customers
    - Number of active customers
-   - Revenue
    - Net Revenue
 3. `CustomerManager::displayReport` prints the customer table.
 
-Revenue meanings:
-- `Revenue` is the current charge from active rentals only.
+Net revenue meaning:
 - `Net Revenue` is the accumulated total of all customer charges, including returned/inactive customers.
 
 ### Exit and Auto-Save
@@ -154,6 +151,7 @@ Key functions:
 
 Important field:
 - `completedCharge` stores returned rental totals so inactive customers do not show `0.00`.
+- `completedPlate` and `completedRate` store the returned vehicle details so inactive customers still show the correct plate and rate.
 
 ### `RentalRecord`
 
@@ -196,7 +194,7 @@ PLATE|MODEL|RATE|IS_RENTED
 Example:
 
 ```text
-FEU1234|BYD Sealion 7|11000|0
+FEU1234|BYD Sealion 7|1100|0
 ```
 
 ### `RentalManager`
@@ -268,7 +266,6 @@ Purpose:
 Key functions:
 - `sortByUsage(std::list<RentalRecord>& records)` sorts active rentals by transaction ID.
 - `findRecordById(...)` searches for a transaction.
-- `calculateRevenue(...)` totals active rental charges only.
 - `calculateNetRevenue(...)` totals all customer charges, including completed rentals.
 - `autoSaveCustomerReport(...)` writes the dashboard and customer list to `data/customer_report.txt`.
 
@@ -292,7 +289,7 @@ Current input rules:
 - Plate: 7 characters, 3 letters followed by 4 digits, example `ABC1234`
 - License: 11 characters, 1 letter followed by 10 digits, example `A1234567890`
 - Contact: 11 digits, example `09123456789`
-- Rate: minimum `8000.00`
+- Rate: minimum `800.00`
 - Rental duration: `1` to `365` days
 
 ### `Colors`
@@ -348,11 +345,8 @@ This file is a report output, not the main source of active rental data.
 
 ## Notes for Groupmates
 
-- `Revenue` and `Net Revenue` are intentionally different:
-  - `Revenue` is for active rentals.
-  - `Net Revenue` accumulates active plus completed customer charges.
-- Returned customers become inactive but keep their final charge.
+- `Net Revenue` accumulates active plus completed customer charges.
+- Returned customers become inactive but keep their final charge, plate, and rate.
 - `bin/` contains build output and is usually ignored by Git.
 - If the app builds on one computer but not another, run `mingw32-make clean` then `mingw32-make`.
 - If Git says local files would be overwritten by pull, check for generated files such as `data/customer_report.txt` before pulling.
-

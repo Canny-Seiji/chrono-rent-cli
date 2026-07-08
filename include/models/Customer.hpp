@@ -13,6 +13,8 @@ struct RentalInfo {
     std::time_t rentStartTime = 0;
     std::time_t expectedReturnTime = 0;
     double completedCharge = 0.0;
+    std::string completedPlate;
+    double completedRate = 0.0;
 
     double getHoursRemaining() const;
     double getHoursOverdue() const;

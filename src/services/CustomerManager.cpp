@@ -40,9 +40,7 @@ void CustomerManager::displayDashboard(int vehicleCount) const {
         }
     }
 
-    double revenue = Analytics::calculateRevenue(customers);
     double netRevenue = Analytics::calculateNetRevenue(customers);
-    std::string revenueColor = revenue < 0 ? Colors::RED : (revenue > 0 ? Colors::GREEN : Colors::RESET);
     std::string netRevenueColor = netRevenue < 0 ? Colors::RED : (netRevenue > 0 ? Colors::GREEN : Colors::RESET);
 
     std::cout << "\n" << Colors::YELLOW << "---Dashboard---" << Colors::RESET << "\n\n";
@@ -50,8 +48,6 @@ void CustomerManager::displayDashboard(int vehicleCount) const {
     std::cout << Colors::YELLOW << "Number of customers: " << Colors::RESET << customers.size() << "\n";
     std::cout << Colors::YELLOW << "Number of active customers: " << Colors::RESET << activeCustomers << "\n";
     std::cout << std::fixed << std::setprecision(2);
-    std::cout << Colors::YELLOW << "Revenue: " << Colors::RESET
-              << revenueColor << revenue << Colors::RESET << "\n";
     std::cout << Colors::YELLOW << "Net Revenue: " << Colors::RESET
               << netRevenueColor << netRevenue << Colors::RESET << "\n\n";
 }
@@ -74,10 +70,10 @@ void CustomerManager::displayReport() const {
 
     for (const auto& c : customers) {
         bool hasActiveVehicle = c.rental.isRenting && c.rental.vehicle != nullptr;
-        std::string plate = hasActiveVehicle ? c.rental.vehicle->getPlate() : "N/A";
+        std::string plate = hasActiveVehicle ? c.rental.vehicle->getPlate() : (c.rental.completedPlate.empty() ? "N/A" : c.rental.completedPlate);
         std::string status = hasActiveVehicle ? "Active" : "Inactive";
         std::string remaining = formatDouble(c.rental.getHoursRemaining());
-        std::string rate = formatDouble(hasActiveVehicle ? c.rental.vehicle->getRate() : 0.0);
+        std::string rate = formatDouble(hasActiveVehicle ? c.rental.vehicle->getRate() : c.rental.completedRate);
         std::string charge = formatDouble(c.rental.getTotalCharge());
 
         wId = std::max(wId, c.id.length());
@@ -112,10 +108,10 @@ void CustomerManager::displayReport() const {
         bool hasActiveVehicle = c.rental.isRenting && c.rental.vehicle != nullptr;
         double totalCharge = c.rental.getTotalCharge();
         
-        std::string plate = hasActiveVehicle ? c.rental.vehicle->getPlate() : "N/A";
+        std::string plate = hasActiveVehicle ? c.rental.vehicle->getPlate() : (c.rental.completedPlate.empty() ? "N/A" : c.rental.completedPlate);
         std::string status = hasActiveVehicle ? "Active" : "Inactive";
         std::string remaining = formatDouble(c.rental.getHoursRemaining());
-        std::string rate = formatDouble(hasActiveVehicle ? c.rental.vehicle->getRate() : 0.0);
+        std::string rate = formatDouble(hasActiveVehicle ? c.rental.vehicle->getRate() : c.rental.completedRate);
         std::string charge = formatDouble(totalCharge);
 
         std::string statusColor = hasActiveVehicle ? Colors::GREEN : Colors::RED;
@@ -137,6 +133,8 @@ void CustomerManager::endRentalByPlate(const std::string& plate) {
     for (auto& c : customers) {
         if (c.rental.isRenting && c.rental.vehicle && c.rental.vehicle->getPlate() == plate) {
             c.rental.completedCharge += c.rental.calculateCurrentCharge();
+            c.rental.completedPlate = c.rental.vehicle->getPlate();
+            c.rental.completedRate = c.rental.vehicle->getRate();
             c.rental.isRenting = false;
             c.rental.vehicle = nullptr;
             return;

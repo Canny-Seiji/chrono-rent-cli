@@ -99,7 +99,7 @@ int main() {
             case 5: { // Add Vehicle
                 std::string model = Parser::getValidName("Enter Model (letters/numbers allowed, e.g., Toyota Vios): ");
                 std::string plate = Parser::getValidPlate("Enter New Vehicle Plate (7 chars: 3 letters + 4 digits, e.g., ABC1234): ");
-                double rate = Parser::getValidDouble("Enter Daily Rental Rate (minimum 8000.00): ", 8000.00);
+                double rate = Parser::getValidDouble("Enter Daily Rental Rate (minimum 800.00): ", 800.00);
                 
                 myFleet.addVehicle(new Car(model, plate, rate));
                 std::cout << "Vehicle added successfully.\n";

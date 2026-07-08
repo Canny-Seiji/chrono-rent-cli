@@ -193,10 +193,10 @@ double Parser::getValidDouble(const std::string& prompt, double min) {
                 }
                 std::cout << Colors::RED << "Rate must be at least " << min << Colors::RESET << "\n";
             } else {
-                std::cout << Colors::RED << "Error: Invalid number format. Examples: 10000, 10,000, PHP 10,000, or 10 000." << Colors::RESET << "\n";
+                std::cout << Colors::RED << "Error: Invalid number format. Examples: 1000, 1,000, PHP 1,000, or 1 000." << Colors::RESET << "\n";
             }
         } catch (...) {
-            std::cout << Colors::RED << "Error: Invalid number format. Examples: 10000, 10,000, PHP 10,000, or 10 000." << Colors::RESET << "\n";
+            std::cout << Colors::RED << "Error: Invalid number format. Examples: 1000, 1,000, PHP 1,000, or 1 000." << Colors::RESET << "\n";
         }
     }
 }

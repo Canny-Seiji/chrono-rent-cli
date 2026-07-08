@@ -18,18 +18,6 @@ RentalRecord* Analytics::findRecordById(std::list<RentalRecord>& records, const 
     return nullptr;
 }
 
-double Analytics::calculateRevenue(const std::list<Customer>& customers) {
-    double revenue = 0.0;
-
-    for (const auto& customer : customers) {
-        if (customer.rental.isRenting) {
-            revenue += customer.rental.calculateCurrentCharge();
-        }
-    }
-
-    return revenue;
-}
-
 double Analytics::calculateNetRevenue(const std::list<Customer>& customers) {
     double netRevenue = 0.0;
 
@@ -61,7 +49,6 @@ void Analytics::autoSaveCustomerReport(const std::string& filename, const std::l
     outFile << "Number of cars: " << vehicleCount << "\n";
     outFile << "Number of customers: " << customers.size() << "\n";
     outFile << "Number of active customers: " << activeCustomers << "\n";
-    outFile << "Revenue: " << formatDouble(calculateRevenue(customers)) << "\n";
     outFile << "Net Revenue: " << formatDouble(calculateNetRevenue(customers)) << "\n\n";
 
     outFile << "---Customer list---\n";
@@ -69,13 +56,15 @@ void Analytics::autoSaveCustomerReport(const std::string& filename, const std::l
 
     for (const auto& customer : customers) {
         bool hasActiveVehicle = customer.rental.isRenting && customer.rental.vehicle != nullptr;
+        std::string plate = hasActiveVehicle ? customer.rental.vehicle->getPlate() : (customer.rental.completedPlate.empty() ? "N/A" : customer.rental.completedPlate);
+        double rate = hasActiveVehicle ? customer.rental.vehicle->getRate() : customer.rental.completedRate;
 
         outFile << customer.id << "|"
                 << customer.getFullName() << "|"
-                << (hasActiveVehicle ? customer.rental.vehicle->getPlate() : "N/A") << "|"
+                << plate << "|"
                 << (hasActiveVehicle ? "Active" : "Inactive") << "|"
                 << formatDouble(customer.rental.getHoursRemaining()) << "|"
-                << formatDouble(hasActiveVehicle ? customer.rental.vehicle->getRate() : 0.0) << "|"
+                << formatDouble(rate) << "|"
                 << formatDouble(customer.rental.getTotalCharge()) << "\n";
     }
 }
