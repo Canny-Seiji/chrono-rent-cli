@@ -11,3 +11,4 @@ Makefile.bak
 .DS_Store
 .vscode/
 .idea/
+data/
