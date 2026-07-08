@@ -275,7 +275,7 @@ std::string Parser::getExistingPlate(Inventory& fleet) {
     std::string plate;
     
     while (true) {
-        std::cout << "Enter Vehicle Plate Number: ";
+        std::cout << "Enter Vehicle Plate Number (7 chars: 3 letters + 4 digits, e.g., ABC1234): ";
         std::cin >> plate;
         clearInputBuffer();
         
