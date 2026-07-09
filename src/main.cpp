@@ -13,8 +13,10 @@ int main() {
     // Load existing data from files
     myFleet.loadFromFile("data/fleet.txt");
     myManager.loadRentals("data/rentals.txt", myFleet);
-    for (const auto& record : myManager.getActiveRentals()) {
-        custRegistry.addCustomer(record.customer);
+    if (!custRegistry.loadCustomers("data/customers.txt", myFleet)) {
+        for (const auto& record : myManager.getActiveRentals()) {
+            custRegistry.addCustomer(record.customer);
+        }
     }
 
     int choice = 0;
@@ -141,6 +143,7 @@ int main() {
     Analytics::sortByUsage(myManager.getActiveRentals());
     myFleet.saveToFile("data/fleet.txt");
     myManager.saveRentals("data/rentals.txt");
+    custRegistry.saveCustomers("data/customers.txt");
     Analytics::autoSaveCustomerReport("data/customer_report.txt", custRegistry.getCustomers(), myFleet.getVehicleCount());
     
     std::cout << Colors::GREEN << "Data has been saved.\n" << Colors::RESET;

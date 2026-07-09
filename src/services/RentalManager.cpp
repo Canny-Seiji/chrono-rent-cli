@@ -22,10 +22,17 @@ void RentalManager::processRental(Customer c, std::string plate, Inventory& inv)
 void RentalManager::saveRentals(const std::string& filename) const {
     std::ofstream outFile(filename);
     for (const auto& record : activeRentals) {
-        // Format: RecordID|CustomerFullName|VehiclePlate
-        outFile << record.recordId << "|" 
-                << record.customer.getFullName() << "|" 
-                << record.vehicle->getPlate() << "\n";
+        const Customer& customer = record.customer;
+        outFile << record.recordId << "|"
+                << customer.id << "|"
+                << customer.fName << "|"
+                << customer.mName << "|"
+                << customer.lName << "|"
+                << customer.license << "|"
+                << customer.contact << "|"
+                << record.vehicle->getPlate() << "|"
+                << customer.rental.rentStartTime << "|"
+                << customer.rental.expectedReturnTime << "\n";
     }
 }
 
@@ -42,7 +49,19 @@ void RentalManager::loadRentals(const std::string& filename, Inventory& inv) {
 
     while (std::getline(inFile, line)) {
         std::vector<std::string> data = Parser::split(line, '|');
-        if (data.size() == 3) {
+        if (data.size() == 10) {
+            Vehicle* v = inv.findVehicle(data[7]);
+            if (v) {
+                Customer loadedCustomer(data[1], data[2], data[3], data[4], data[5], data[6]);
+                loadedCustomer.rental.isRenting = true;
+                loadedCustomer.rental.vehicle = v;
+                loadedCustomer.rental.rentStartTime = static_cast<std::time_t>(std::stoll(data[8]));
+                loadedCustomer.rental.expectedReturnTime = static_cast<std::time_t>(std::stoll(data[9]));
+
+                v->setRentedStatus(true);
+                activeRentals.emplace_back(data[0], loadedCustomer, v);
+            }
+        } else if (data.size() == 3) {
             Vehicle* v = inv.findVehicle(data[2]);
             if (v) {
                 std::string customerName = data[1].empty() ? "Unknown Customer" : data[1];

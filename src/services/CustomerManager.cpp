@@ -7,6 +7,7 @@
 #include <iostream>
 #include <iomanip>
 #include <sstream>
+#include <fstream>
 
 // Adds a new customer to the list of customers
 void CustomerManager::addCustomer(const Customer& c) {
@@ -154,6 +155,64 @@ bool CustomerManager::contactExists(const std::string& contact) const {
         }
     }
     return false;
+}
+
+bool CustomerManager::loadCustomers(const std::string& filename, Inventory& inventory) {
+    std::ifstream inFile(filename);
+    std::string line;
+
+    while (std::getline(inFile, line)) {
+        std::vector<std::string> data = Parser::split(line, '|');
+        if (data.size() != 13) continue;
+
+        try {
+            Customer customer(data[0], data[1], data[2], data[3], data[4], data[5]);
+            customer.rental.isRenting = data[6] == "1";
+            customer.rental.rentStartTime = static_cast<std::time_t>(std::stoll(data[8]));
+            customer.rental.expectedReturnTime = static_cast<std::time_t>(std::stoll(data[9]));
+            customer.rental.completedCharge = std::stod(data[10]);
+            customer.rental.completedPlate = data[11];
+            customer.rental.completedRate = std::stod(data[12]);
+
+            if (customer.rental.isRenting) {
+                customer.rental.vehicle = inventory.findVehicle(data[7]);
+                if (customer.rental.vehicle == nullptr) continue;
+                customer.rental.vehicle->setRentedStatus(true);
+            }
+
+            customers.push_back(customer);
+        } catch (const std::exception&) {
+            continue;
+        }
+    }
+
+    return !customers.empty();
+}
+
+void CustomerManager::saveCustomers(const std::string& filename) const {
+    std::ofstream outFile(filename);
+    if (!outFile) return;
+
+    outFile << std::setprecision(17);
+    for (const auto& customer : customers) {
+        std::string activePlate = customer.rental.isRenting && customer.rental.vehicle
+            ? customer.rental.vehicle->getPlate()
+            : "";
+
+        outFile << customer.id << "|"
+                << customer.fName << "|"
+                << customer.mName << "|"
+                << customer.lName << "|"
+                << customer.license << "|"
+                << customer.contact << "|"
+                << (customer.rental.isRenting ? 1 : 0) << "|"
+                << activePlate << "|"
+                << customer.rental.rentStartTime << "|"
+                << customer.rental.expectedReturnTime << "|"
+                << customer.rental.completedCharge << "|"
+                << customer.rental.completedPlate << "|"
+                << customer.rental.completedRate << "\n";
+    }
 }
 
 // Returns a reference to the list of customers

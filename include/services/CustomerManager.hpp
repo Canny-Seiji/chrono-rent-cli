@@ -5,6 +5,8 @@
 #include <algorithm>
 #include "../models/Customer.hpp"
 
+class Inventory;
+
 // CustomerManager class to manage customer-related operations in the rental system
 class CustomerManager {
 private:
@@ -21,6 +23,8 @@ public:
     void displayDashboard(int vehicleCount) const;
     void endRentalByPlate(const std::string& plate);
     bool contactExists(const std::string& contact) const;
+    bool loadCustomers(const std::string& filename, Inventory& inventory);
+    void saveCustomers(const std::string& filename) const;
     std::list<Customer>& getCustomers(); 
 };
 
