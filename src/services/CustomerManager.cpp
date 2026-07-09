@@ -43,12 +43,15 @@ void CustomerManager::displayDashboard(int vehicleCount) const {
     double netRevenue = Analytics::calculateNetRevenue(customers);
     std::string netRevenueColor = netRevenue < 0 ? Colors::RED : (netRevenue > 0 ? Colors::GREEN : Colors::RESET);
 
-    std::cout << "\n" << Colors::YELLOW << "---Dashboard---" << Colors::RESET << "\n\n";
-    std::cout << Colors::YELLOW << "Number of cars: " << Colors::RESET << vehicleCount << "\n";
-    std::cout << Colors::YELLOW << "Number of customers: " << Colors::RESET << customers.size() << "\n";
-    std::cout << Colors::YELLOW << "Number of active customers: " << Colors::RESET << activeCustomers << "\n";
+    std::cout << Colors::YELLOW << std::string(50, '=') << "\n" << Colors::RESET;
+    std::cout << Colors::YELLOW << "                 System Dashboard" << Colors::RESET << "\n";
+    std::cout << Colors::YELLOW << std::string(50, '=') << "\n" << Colors::RESET;
+
+    std::cout << Colors::CYAN << "Number of cars: " << Colors::RESET << vehicleCount << "\n";
+    std::cout << Colors::CYAN << "Number of customers: " << Colors::RESET << customers.size() << "\n";
+    std::cout << Colors::CYAN << "Number of active customers: " << Colors::RESET << activeCustomers << "\n";
     std::cout << std::fixed << std::setprecision(2);
-    std::cout << Colors::YELLOW << "Net Revenue: " << Colors::RESET
+    std::cout << Colors::CYAN << "Net Revenue: " << Colors::RESET
               << netRevenueColor << netRevenue << Colors::RESET << "\n\n";
 }
 
@@ -94,7 +97,7 @@ void CustomerManager::displayReport() const {
     wRate += padding;
     wCharge += padding;
 
-    std::cout << Colors::YELLOW << "-Customer list\n";
+    std::cout << Colors::YELLOW << "--- Customer list\n";
     std::cout << std::left << std::setw(wId) << "ID"
               << std::setw(wName) << "Name"
               << std::setw(wPlate) << "Plate"
@@ -103,7 +106,9 @@ void CustomerManager::displayReport() const {
               << std::setw(wRate) << "Rate"
               << std::setw(wCharge) << "Charge" << "\n"
               << Colors::RESET;
-    
+
+    std::cout << std::string(wId + wName + wPlate + wStatus + wRemaining + wRate + wCharge, '-') << "\n";
+
     for (const auto& c : customers) {
         bool hasActiveVehicle = c.rental.isRenting && c.rental.vehicle != nullptr;
         double totalCharge = c.rental.getTotalCharge();
