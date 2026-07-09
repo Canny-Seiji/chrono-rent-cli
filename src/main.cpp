@@ -68,7 +68,7 @@ int main() {
                 vehiclePtr->setRentedStatus(true);
 
                 myManager.addRentalRecord(RentalRecord("TX-001", newCust, vehiclePtr));
-                std::cout << Colors::GREEN << "Rental successful!" << Colors::RESET << " Customer ID: " << id << "\n";
+                std::cout << Colors::GREEN << "Rental successful!\n" << Colors::RESET << "Customer ID: " << id << "\n";
                 std::cout << "Estimated charge: " << Colors::YELLOW << newCust.rental.calculateCurrentCharge() << "\n" << Colors::RESET;
                 break;
             }
@@ -102,7 +102,7 @@ int main() {
                 double rate = Parser::getValidDouble("Enter Daily Rental Rate (minimum 800.00): ", 800.00);
                 
                 myFleet.addVehicle(new Car(model, plate, rate));
-                std::cout << "Vehicle added successfully.\n";
+                std::cout << Colors::GREEN << "Vehicle added successfully.\n" << Colors::RESET;
                 break;
             }
 
